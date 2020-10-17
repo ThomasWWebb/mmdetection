@@ -27,7 +27,7 @@ except AssertionError:
 @DATASETS.register_module()
 class CocoDataset(CustomDataset):
 
-    classes = ('Folding_Knife', "Straight_Knife", "Scissor", "Utility_Knife", "Multi-tool_Knife")
+    CLASSES = ('Folding_Knife', "Straight_Knife", "Scissor", "Utility_Knife", "Multi-tool_Knife")
 
 
     def load_annotations(self, ann_file):
