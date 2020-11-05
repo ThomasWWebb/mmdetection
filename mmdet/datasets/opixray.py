@@ -12,7 +12,7 @@ from terminaltables import AsciiTable
 
 from mmdet.core import eval_recalls
 from .builder import DATASETS
-from .coco import CocoDataset
+from .custom import CustomDataset
 
 try:
     import pycocotools
@@ -25,7 +25,7 @@ except AssertionError:
 
 
 @DATASETS.register_module()
-class OPIXrayDataset(CocoDataset):
+class OPIXrayDataset(CustomDataset):
 
     CLASSES = ('Folding_Knife', "Straight_Knife", "Scissor", "Utility_Knife", "Multi-tool_Knife")
 
