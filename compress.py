@@ -17,5 +17,3 @@ def compress_coco_dataset(root_path, dataset_name, quality_arr):
     for quality in quality_arr:
         for folder in folders:
             compress_folder_contents(root_path + dataset_name + "/" + folder, root_path + dataset_name + "_{}/".format(quality) + folder, quality)
-
-compress_coco_dataset("../datasets/", "sixray", [95, 50, 10])
