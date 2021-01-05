@@ -260,7 +260,7 @@ def main():
                 if cv2.waitKey(0) == 27:
                     exit()
         avg_inference_time = sum(inference_times) / len(inference_times)
-        print("The average inference time over {} images is {} seconds".format(len(inference_times), avg_inference_time))
+        print("The average inference time over {} images is {} seconds so the FPS is {}".format(len(inference_times), avg_inference_time, 1/avg_inference_time))
     else:
         im = test_set_path
         print('Image: ', im)
