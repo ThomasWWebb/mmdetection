@@ -11,6 +11,7 @@ import os
 import numpy as np
 import json
 import imutils
+import time
 
 
 def draw_bbox_pil(args, im, img, bbox_result, segm_result, CLASSES, labels, colors, bbox_thrs):
@@ -209,13 +210,16 @@ def main():
 
     test_set_path = test_set_root + "/test2017"
     if os.path.isdir(test_set_path):
+        inference_times = []
         for im in os.listdir(test_set_path):
             print('Image: ', im)
-            
-            #start time
+
+            #record fps
+            start = time.time()
             result = inference_detector(model, f'{test_set_path}/{im}')
-            #end time
-            #Calculate fps
+            end = time.time()
+            inference_times.append(end - start)
+            
             
             #show_result_pyplot(model, f'{test_set_path}/{im}', output_dir, result, score_thr=args.score_thr)
 
@@ -255,6 +259,8 @@ def main():
                 cv2.imshow(WINDOW_NAME, img)
                 if cv2.waitKey(0) == 27:
                     exit()
+        avg_inference_time = sum(inference_times) / len(inference_times)
+        print("The average inference time over {} images is {} seconds".format(len(inference_times), avg_inference_time))
     else:
         im = test_set_path
         print('Image: ', im)
