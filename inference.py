@@ -253,7 +253,7 @@ def main():
                 bbox_thrs
             )
 
-            if output_dir and args.crop != 'yes' and save_imgs=True:
+            if output_dir and args.crop != 'yes' and save_imgs == True:
                 cv2.imwrite(f'{output_dir}/{im}',img)
             else:
                 cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
