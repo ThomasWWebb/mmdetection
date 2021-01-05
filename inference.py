@@ -179,7 +179,7 @@ def main():
 
     WINDOW_NAME = 'Detection'
     CLASSES = []
-    test_set_path = test_set_root + "annotations/instances_test2017.json"
+    test_set_path = test_set_root + "/annotations/instances_test2017.json"
     with open(test_set_path) as f:
        json_data = json.load(f)
     for data_id, data_info in json_data.items():
