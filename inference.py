@@ -25,7 +25,8 @@ def draw_bbox_pil(args, im, img, bbox_result, segm_result, CLASSES, labels, colo
         inds = np.where(bboxes[:, -1] > args.score_thr)[0]
         np.random.seed(42)
         color_masks = [
-            np.random.randint(0, 256, (1, 3), dtype=np.uint8)
+            #np.random.randint(0, 256, (1, 3), dtype=np.uint8)
+	np.array([0, 0, 255])
             for _ in range(max(labels) + 1)
         ]
         inds_mask = inds
@@ -126,12 +127,17 @@ def draw_bbox_pil(args, im, img, bbox_result, segm_result, CLASSES, labels, colo
                 right_bottom = (bbox_int[2], bbox_int[3])
                 
                 cv2.rectangle(
-                    img, left_top, right_bottom, color=color, thickness=1)
+                    img, left_top, right_bottom, color=[0, 0, 255], thickness=3)
                 if len(bbox) > 4:
                     label_text += f'|{bbox[-1]:.02f}'
 
+                rectangle_bgr = (0, 0, 255)
+                (text_width, text_height) = cv2.getTextSize(label_text, cv2.FONT_HERSHEY_TRIPLEX, fontScale=0.5, thickness=1)[0]
+                box_coords = ((bbox_int[0] - 2,  bbox_int[1] - text_height - 2), (bbox_int[0] + text_width + 2,  bbox_int[1] + 2))
+                cv2.rectangle(img, box_coords[0], box_coords[1], rectangle_bgr, cv2.FILLED)
+
                 cv2.putText(img, label_text, (bbox_int[0], bbox_int[1] - 2),
-                            cv2.FONT_HERSHEY_TRIPLEX, 0.5, color=color)
+                            cv2.FONT_HERSHEY_TRIPLEX, 0.5, color=[255, 255, 255])
         # else:
         #     print('Invalid target class.')
     
@@ -196,8 +202,7 @@ def main():
         args.yes_cls = CLASSES
 
     # build the model from a config file and a checkpoint file
-    print(args.device)
-    model = init_detector(config_file, tuple(CLASSES), checkpoint_file, device=args.device)
+    model = init_detector(config_file, checkpoint_file)#, device=args.device)
    
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
