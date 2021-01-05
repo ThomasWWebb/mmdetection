@@ -196,6 +196,7 @@ def main():
         args.yes_cls = CLASSES
 
     # build the model from a config file and a checkpoint file
+    print(args.device)
     model = init_detector(config_file, tuple(CLASSES), checkpoint_file, device=args.device)
    
     if output_dir:
