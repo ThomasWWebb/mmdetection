@@ -182,7 +182,8 @@ def main():
     config_file = './configs/{}/retinanet_{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
     checkpoint_file = "./{}_{}_e30_{}_trueResolution/epoch_10.pth".format(model_name, backbone, dataset)
     test_set_root = "../datasets/{}".format(dataset)
-    #output_dir = "./{}_{}_e30_{}_trueResolution/sample_images".format(model_name, backbone, dataset)
+    output_dir = "./{}_{}_e30_{}_trueResolution/sample_images".format(model_name, backbone, dataset)
+    save_imgs = False
 
     WINDOW_NAME = 'Detection'
     CLASSES = []
@@ -252,7 +253,7 @@ def main():
                 bbox_thrs
             )
 
-            if output_dir and args.crop != 'yes':
+            if output_dir and args.crop != 'yes' and save_imgs=True:
                 cv2.imwrite(f'{output_dir}/{im}',img)
             else:
                 cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
