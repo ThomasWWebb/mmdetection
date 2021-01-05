@@ -151,6 +151,24 @@ def draw_bbox_pil(args, im, img, bbox_result, segm_result, CLASSES, labels, colo
 
 def main():
 
+    
+
+    parser = ArgumentParser()
+    # parser.add_argument('img', help='Image file')
+    # parser.add_argument('--input', help='Input image directory/image')
+    # parser.add_argument('--output', help='Output image directory')
+    # parser.add_argument('--db', type=str, help='dataset name')
+    parser.add_argument('--yes_cls', type=str, help='Target object class, - separated [car-dog], default all classes.')
+    parser.add_argument('--crop', default='no', type=str, help='Crop detected objets [yes]')
+    # parser.add_argument('config', help='Config file')
+    # parser.add_argument('checkpoint', help='Checkpoint file')
+    parser.add_argument(
+        '--device', default='cuda:0', help='Device used for inference')
+    parser.add_argument(
+        '--score-thr', type=float, default=0.7, help='bbox score threshold')
+    args = parser.parse_args()
+    print(f'\n\n{args}\n\n')
+
     model_name = "free_anchor"
     backbone = "r50"
     dataset = "opixray"
@@ -158,23 +176,6 @@ def main():
     checkpoint_file = "./{}_{}_e30_{}_trueResolution/epoch_10.pth".format(model_name, backbone, dataset)
     test_set_root = "../datasets/{}_subset".format(dataset)
     output_dir = "./{}_{}_e30_{}_trueResolution/sample_images".format(model_name, backbone, dataset)
-
-    parser = ArgumentParser()
-    # parser.add_argument('img', help='Image file')
-    parser.add_argument('--input', help='Input image directory/image')
-    parser.add_argument('--output', help='Output image directory')
-    parser.add_argument('--db', type=str, help='dataset name')
-    parser.add_argument('--yes_cls', type=str, help='Target object class, - separated [car-dog], default all classes.')
-    parser.add_argument('--dbpath', default='../dataset', type=str, help='dataset directory path')
-    parser.add_argument('--crop', default='no', type=str, help='Crop detected objets [yes]')
-    parser.add_argument('config', help='Config file')
-    parser.add_argument('checkpoint', help='Checkpoint file')
-    parser.add_argument(
-        '--device', default='cuda:0', help='Device used for inference')
-    parser.add_argument(
-        '--score-thr', type=float, default=0.7, help='bbox score threshold')
-    args = parser.parse_args()
-    print(f'\n\n{args}\n\n')
 
     WINDOW_NAME = 'Detection'
     CLASSES = []
