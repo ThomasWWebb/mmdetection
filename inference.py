@@ -183,67 +183,107 @@ def main():
     # backbone = "r101"
     # dataset = "sixray"
 
-    for model_name in models: 
+    for model_name in models:    
         for backbone in backbones:
-            for dataset in datasets:   
-                print("{} {} {}".format(model_name, backbone, dataset))
-                config_file = './configs/{}/{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
-                if model_name == "free_anchor":
-                    config_file = './configs/{}/retinanet_{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
-                checkpoint_file = "./{}_{}_e30_{}_trueResolution/epoch_10.pth".format(model_name, backbone, dataset)
-                test_set_root = "../datasets/{}_subset".format(dataset)
-                output_dir = "./{}_{}_e30_{}_trueResolution/test_detect_images".format(model_name, backbone, dataset)
+                for dataset in datasets:   
+                    print("{} {} {}".format(model_name, backbone, dataset))
+                    config_file = './configs/{}/{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
+                    if model_name == "free_anchor":
+                        config_file = './configs/{}/retinanet_{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
+                    checkpoint_file = "./{}_{}_e30_{}_trueResolution/epoch_10.pth".format(model_name, backbone, dataset)
+                    test_set_root = "../datasets/{}_subset".format(dataset)
+                    output_dir = "./{}_{}_e30_{}_trueResolution/test_detect_images".format(model_name, backbone, dataset)
 
-                WINDOW_NAME = 'Detection'
-                CLASSES = []
-                test_set_path = test_set_root + "/annotations/instances_test2017.json"
-                with open(test_set_path) as f:
-                json_data = json.load(f)
-                for data_id, data_info in json_data.items():
-                    if data_id == 'categories':
-                        for cat in data_info:
-                            CLASSES.append(cat['name'])
-                # CLASSES = tuple(CLASSES)
-                colors = sns.color_palette("husl", len(CLASSES))
+                    WINDOW_NAME = 'Detection'
+                    CLASSES = []
+                    test_set_path = test_set_root + "/annotations/instances_test2017.json"
+                    with open(test_set_path) as f:
+                        json_data = json.load(f)
+                    for data_id, data_info in json_data.items():
+                        if data_id == 'categories':
+                            for cat in data_info:
+                                CLASSES.append(cat['name'])
+                    # CLASSES = tuple(CLASSES)
+                    colors = sns.color_palette("husl", len(CLASSES))
 
-                bbox_thrs = 0
-                if args.yes_cls is not None:
-                    args.yes_cls = args.yes_cls.split("-")
-                else:
-                    args.yes_cls = CLASSES
+                    bbox_thrs = 0
+                    if args.yes_cls is not None:
+                        args.yes_cls = args.yes_cls.split("-")
+                    else:
+                        args.yes_cls = CLASSES
 
-                # build the model from a config file and a checkpoint file
-                model = init_detector(config_file, checkpoint_file)#, device=args.device)
-            
-                if output_dir:
-                    os.makedirs(output_dir, exist_ok=True)
+                    # build the model from a config file and a checkpoint file
+                    model = init_detector(config_file, checkpoint_file)#, device=args.device)
+                
+                    if output_dir:
+                        os.makedirs(output_dir, exist_ok=True)
 
-                test_set_path = test_set_root + "/test2017"
-                if os.path.isdir(test_set_path):
-                    inference_times = []
-                    for im in os.listdir(test_set_path):
+                    test_set_path = test_set_root + "/test2017"
+                    if os.path.isdir(test_set_path):
+                        inference_times = []
+                        for im in os.listdir(test_set_path):
+                            print('Image: ', im)
+
+                            #record fps
+                            start = time.time()
+                            result = inference_detector(model, f'{test_set_path}/{im}')
+                            end = time.time()
+                            inference_times.append(end - start)
+                            
+                            
+                            #show_result_pyplot(model, f'{test_set_path}/{im}', output_dir, result, score_thr=args.score_thr)
+
+                            ####
+                            
+                            img = mmcv.imread(f'{test_set_path}/{im}')
+                            # img = img.copy()
+                            if isinstance(result, tuple):
+                                bbox_result, segm_result = result
+                                if isinstance(segm_result, tuple):
+                                    segm_result = segm_result[0]  # ms rcnn
+                            else:
+                                bbox_result, segm_result = result, None
+                            # bboxes = np.vstack(bbox_result)
+                            labels = [
+                                np.full(bbox.shape[0], i, dtype=np.int32)
+                                for i, bbox in enumerate(bbox_result)
+                            ]
+                            labels = np.concatenate(labels)
+
+                            img = draw_bbox_pil(
+                                args,
+                                im, 
+                                img, 
+                                bbox_result, 
+                                segm_result, 
+                                CLASSES, 
+                                labels, 
+                                colors, 
+                                bbox_thrs
+                            )
+
+                            if output_dir and args.crop != 'yes':
+                                cv2.imwrite(f'{output_dir}/{im}',img)
+                            else:
+                                cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
+                                cv2.imshow(WINDOW_NAME, img)
+                                if cv2.waitKey(0) == 27:
+                                    exit()
+                        avg_inference_time = sum(inference_times) / len(inference_times)
+                        print("The average inference time over {} images is {} seconds so the FPS is {}".format(len(inference_times), avg_inference_time, 1/avg_inference_time))
+                    else:
+                        im = test_set_path
                         print('Image: ', im)
-
-                        #record fps
-                        start = time.time()
-                        result = inference_detector(model, f'{test_set_path}/{im}')
-                        end = time.time()
-                        inference_times.append(end - start)
-                        
-                        
-                        #show_result_pyplot(model, f'{test_set_path}/{im}', output_dir, result, score_thr=args.score_thr)
-
+                        result = inference_detector(model, im)
                         ####
-                        
-                        img = mmcv.imread(f'{test_set_path}/{im}')
-                        # img = img.copy()
+                        img = mmcv.imread(im)
                         if isinstance(result, tuple):
                             bbox_result, segm_result = result
                             if isinstance(segm_result, tuple):
                                 segm_result = segm_result[0]  # ms rcnn
                         else:
                             bbox_result, segm_result = result, None
-                        # bboxes = np.vstack(bbox_result)
+                        
                         labels = [
                             np.full(bbox.shape[0], i, dtype=np.int32)
                             for i, bbox in enumerate(bbox_result)
@@ -269,46 +309,6 @@ def main():
                             cv2.imshow(WINDOW_NAME, img)
                             if cv2.waitKey(0) == 27:
                                 exit()
-                    avg_inference_time = sum(inference_times) / len(inference_times)
-                    print("The average inference time over {} images is {} seconds so the FPS is {}".format(len(inference_times), avg_inference_time, 1/avg_inference_time))
-                else:
-                    im = test_set_path
-                    print('Image: ', im)
-                    result = inference_detector(model, im)
-                    ####
-                    img = mmcv.imread(im)
-                    if isinstance(result, tuple):
-                        bbox_result, segm_result = result
-                        if isinstance(segm_result, tuple):
-                            segm_result = segm_result[0]  # ms rcnn
-                    else:
-                        bbox_result, segm_result = result, None
-                    
-                    labels = [
-                        np.full(bbox.shape[0], i, dtype=np.int32)
-                        for i, bbox in enumerate(bbox_result)
-                    ]
-                    labels = np.concatenate(labels)
-
-                    img = draw_bbox_pil(
-                        args,
-                        im, 
-                        img, 
-                        bbox_result, 
-                        segm_result, 
-                        CLASSES, 
-                        labels, 
-                        colors, 
-                        bbox_thrs
-                    )
-
-                    if output_dir and args.crop != 'yes':
-                        cv2.imwrite(f'{output_dir}/{im}',img)
-                    else:
-                        cv2.namedWindow(WINDOW_NAME, cv2.WINDOW_NORMAL)
-                        cv2.imshow(WINDOW_NAME, img)
-                        if cv2.waitKey(0) == 27:
-                            exit()
 
 if __name__ == '__main__':
     main()
