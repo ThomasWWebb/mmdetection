@@ -183,12 +183,6 @@ def main():
     # backbone = "r101"
     # dataset = "sixray"
 
-    bbox_thrs = 0
-    if args.yes_cls is not None:
-        args.yes_cls = args.yes_cls.split("-")
-    else:
-        args.yes_cls = CLASSES
-
     for model_name in models:    
         for backbone in backbones:
                 for dataset in datasets:   
@@ -212,7 +206,12 @@ def main():
                     # CLASSES = tuple(CLASSES)
                     colors = sns.color_palette("husl", len(CLASSES))
 
-                    
+                    bbox_thrs = 0
+                    args.yes_cls = None
+                    if args.yes_cls is not None:
+                        args.yes_cls = args.yes_cls.split("-")
+                    else:
+                        args.yes_cls = CLASSES
 
                     # build the model from a config file and a checkpoint file
                     model = init_detector(config_file, checkpoint_file)#, device=args.device)
