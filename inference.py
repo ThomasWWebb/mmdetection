@@ -223,7 +223,7 @@ def main():
                     if os.path.isdir(test_set_path):
                         inference_times = []
                         for im in os.listdir(test_set_path):
-                            print('Image: ', im)
+                            #print('Image: ', im)
 
                             #record fps
                             start = time.time()
