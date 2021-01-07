@@ -138,7 +138,7 @@ def draw_bbox_pil(args, im, img, bbox_result, segm_result, CLASSES, labels, colo
                 cv2.rectangle(img, box_coords[0], box_coords[1], rectangle_bgr, cv2.FILLED)
 
                 cv2.putText(img, label_text, (bbox_int[0], bbox_int[1] - 2),
-                            cv2.FONT_HERSHEY_TRIPLEX, 0.5, color=[255, 255, 255])
+                            cv2.FONT_HERSHEY_TRIPLEX, 1, color=[255, 255, 255])
         # else:
         #     print('Invalid target class.')
     
@@ -223,7 +223,7 @@ def main():
                     if os.path.isdir(test_set_path):
                         inference_times = []
                         for im in os.listdir(test_set_path):
-                            #print('Image: ', im)
+                            print('Image: ', im)
 
                             #record fps
                             start = time.time()
