@@ -133,7 +133,7 @@ def draw_bbox_pil(args, im, img, bbox_result, segm_result, CLASSES, labels, colo
                     label_text += f'|{bbox[-1]:.02f}'
 
                 rectangle_bgr = (0, 0, 255)
-                (text_width, text_height) = cv2.getTextSize(label_text, cv2.FONT_HERSHEY_TRIPLEX, fontScale=0.5, thickness=1)[0]
+                (text_width, text_height) = cv2.getTextSize(label_text, cv2.FONT_HERSHEY_TRIPLEX, fontScale=1, thickness=1)[0]
                 box_coords = ((bbox_int[0] - 2,  bbox_int[1] - text_height - 2), (bbox_int[0] + text_width + 2,  bbox_int[1] + 2))
                 cv2.rectangle(img, box_coords[0], box_coords[1], rectangle_bgr, cv2.FILLED)
 
