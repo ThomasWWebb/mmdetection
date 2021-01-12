@@ -177,7 +177,7 @@ def main():
     print(f'\n\n{args}\n\n')
 
     models = ["free_anchor", "cascade_rcnn"]
-    backbones = ["r50", "r101"]
+    backbones = ["r50"]
     datasets = ["opixray", "sixray"]
     # model_name = "cascade_rcnn"
     # backbone = "r101"
@@ -190,7 +190,7 @@ def main():
                     config_file = './configs/{}/{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
                     if model_name == "free_anchor":
                         config_file = './configs/{}/retinanet_{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
-                    checkpoint_file = "./{}_{}_e30_{}_trueResolution/epoch_10.pth".format(model_name, backbone, dataset)
+                    checkpoint_file = "./{}_{}_e30_{}_trueResolution_adam/epoch_10.pth".format(model_name, backbone, dataset)
                     test_set_root = "../datasets/{}".format(dataset)
                     output_dir = "./{}_{}_e30_{}_trueResolution/test_detect_images".format(model_name, backbone, dataset)
 
