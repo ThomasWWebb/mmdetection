@@ -136,7 +136,7 @@ def draw_bbox_pil(args, im, img, bbox_result, segm_result, CLASSES, labels, colo
                 (text_width, text_height) = cv2.getTextSize(label_text, cv2.FONT_HERSHEY_TRIPLEX, fontScale=1, thickness=1)[0]
                 box_coords = ((bbox_int[0] - 2,  bbox_int[1] - text_height - 2), (bbox_int[0] + text_width + 2,  bbox_int[1] + 2))
                 cv2.rectangle(img, box_coords[0], box_coords[1], rectangle_bgr, cv2.FILLED)
-                print(label_text)
+                #print(label_text)
                 cv2.putText(img, label_text, (bbox_int[0], bbox_int[1] - 2),
                             cv2.FONT_HERSHEY_TRIPLEX, 1, color=[255, 255, 255])
         # else:
@@ -178,21 +178,23 @@ def main():
 
     models = ["free_anchor", "cascade_rcnn"]
     backbones = ["r50"]
-    datasets = ["opixray"]
+    datasets = ["opixray", "sixray"]
+    qualities = [10, 95]
     # model_name = "cascade_rcnn"
     # backbone = "r101"
     # dataset = "sixray"
 
     for model_name in models:    
         for backbone in backbones:
+            for quality in qualities
                 for dataset in datasets:   
                     print("{} {} {}".format(model_name, backbone, dataset))
                     config_file = './configs/{}/{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
                     if model_name == "free_anchor":
                         config_file = './configs/{}/retinanet_{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
-                    checkpoint_file = "./{}_{}_e30_{}_trueResolution_adam/epoch_10.pth".format(model_name, backbone, dataset)
+                    checkpoint_file = "./{}_{}_e30_{}_{}_trueResolution/epoch_10.pth".format(model_name, backbone, dataset, quality)
                     test_set_root = "../datasets/{}".format(dataset)
-                    output_dir = "./{}_{}_e30_{}_trueResolution_adam/test_detect_images".format(model_name, backbone, dataset)
+                    output_dir = "./{}_{}_e30_{}_{}_trueResolution/test_detect_images".format(model_name, backbone, dataset, quality)
 
                     WINDOW_NAME = 'Detection'
                     CLASSES = []
