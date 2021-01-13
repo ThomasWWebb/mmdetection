@@ -193,7 +193,7 @@ def main():
                     if model_name == "free_anchor":
                         config_file = './configs/{}/retinanet_{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
                     checkpoint_file = "./{}_{}_e30_{}_{}_trueResolution_adam/epoch_10.pth".format(model_name, backbone, dataset, quality)
-                    test_set_root = "../datasets/{}".format(dataset)
+                    test_set_root = "../datasets/{}_{}".format(dataset, quality)
                     output_dir = "./{}_{}_e30_{}_{}_trueResolution_adam/test_detect_images".format(model_name, backbone, dataset, quality)
 
                     WINDOW_NAME = 'Detection'
