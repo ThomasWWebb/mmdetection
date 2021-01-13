@@ -179,7 +179,7 @@ def main():
     models = ["free_anchor", "cascade_rcnn"]
     backbones = ["r50"]
     datasets = ["opixray", "sixray"]
-    qualities = [10, 95]
+    qualities = [10]
     # model_name = "cascade_rcnn"
     # backbone = "r101"
     # dataset = "sixray"
@@ -194,7 +194,7 @@ def main():
                         config_file = './configs/{}/retinanet_{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
                     checkpoint_file = "./{}_{}_e30_{}_trueResolution/epoch_10.pth".format(model_name, backbone, dataset)
                     test_set_root = "../datasets/{}_{}".format(dataset, quality)
-                    output_dir = "./{}_{}_e30_{}_trueResolution/test_detect_images_{}".format(model_name, backbone, dataset, quality)
+                    output_dir = "./{}_{}_e30_{}_trueResolution/test_detect_images_original_to_{}".format(model_name, backbone, dataset, quality)
 
                     WINDOW_NAME = 'Detection'
                     CLASSES = []
