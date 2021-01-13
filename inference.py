@@ -179,7 +179,7 @@ def main():
     models = ["free_anchor", "cascade_rcnn"]
     backbones = ["r50"]
     datasets = ["opixray", "sixray"]
-    qualities = [10]
+    qualities = [95]
     # model_name = "cascade_rcnn"
     # backbone = "r101"
     # dataset = "sixray"
