@@ -186,7 +186,7 @@ def main():
 
     for model_name in models:    
         for backbone in backbones:
-            for quality in qualities
+            for quality in qualities:
                 for dataset in datasets:   
                     print("{} {} {}".format(model_name, backbone, dataset))
                     config_file = './configs/{}/{}_{}_fpn_1x_coco_{}.py'.format(model_name,model_name, backbone, dataset)
