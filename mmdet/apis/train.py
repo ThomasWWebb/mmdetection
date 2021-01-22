@@ -72,7 +72,10 @@ def train_detector(model,
             dist=distributed,
             seed=cfg.seed) for ds in dataset
     ]
+    print("len before append {}".format(len(data_loaders)))
     data_loaders.append(val_dataloader)
+    print("len after append {}".format(len(data_loaders)))
+    print("len of workflow {}".format(len(cfg.workflow)))
     # put model on gpus
     if distributed:
         find_unused_parameters = cfg.get('find_unused_parameters', False)
