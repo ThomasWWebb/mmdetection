@@ -76,8 +76,6 @@ def train_detector(model,
     data_loaders.append(val_dataloader)
     print("len after append {}".format(len(data_loaders)))
     print("len of workflow {}".format(len(cfg.workflow)))
-    assert len(data_loaders) == len(workflow), \
-            f'len of dataloaders {len(data_loaders)} not equal to len of workflow {len(workflow)} {workflow} ' 
     # put model on gpus
     if distributed:
         find_unused_parameters = cfg.get('find_unused_parameters', False)
@@ -151,4 +149,4 @@ def train_detector(model,
         runner.resume(cfg.resume_from)
     elif cfg.load_from:
         runner.load_checkpoint(cfg.load_from)
-    #runner.run(data_loaders, cfg.workflow, cfg.total_epochs)
+    runner.run(data_loaders, cfg.workflow, cfg.total_epochs)
