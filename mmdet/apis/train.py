@@ -55,7 +55,13 @@ def train_detector(model,
                 'Automatically set "samples_per_gpu"="imgs_per_gpu"='
                 f'{cfg.data.imgs_per_gpu} in this experiments')
         cfg.data.samples_per_gpu = cfg.data.imgs_per_gpu
-
+    val_dataset = build_dataset(cfg.data.val, dict(test_mode=True))
+    val_dataloader = build_dataloader(
+        val_dataset,
+        samples_per_gpu=1,
+        workers_per_gpu=cfg.data.workers_per_gpu,
+        dist=distributed,
+        shuffle=False)
     data_loaders = [
         build_dataloader(
             ds,
@@ -66,7 +72,7 @@ def train_detector(model,
             dist=distributed,
             seed=cfg.seed) for ds in dataset
     ]
-
+    data_loaders.append(val_dataloader)
     # put model on gpus
     if distributed:
         find_unused_parameters = cfg.get('find_unused_parameters', False)
