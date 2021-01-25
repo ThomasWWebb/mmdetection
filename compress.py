@@ -13,7 +13,7 @@ def compress_folder_contents(folder_path, new_folder_path, quality):
         compress_file(folder_path + file_name, new_folder_path + file_name, quality)
 
 def compress_coco_dataset(root_path, dataset_name, quality_arr):
-    folders = ["train2017/", "val2017/", "test2017/"]
+    folders = ["train2017", "val2017", "test2017"]
     for quality in quality_arr:
         for folder in folders:
-            compress_folder_contents(root_path + dataset_name + "/" + folder, root_path + dataset_name + "_{}/".format(quality) + folder, quality)
+            compress_folder_contents(f"{root_path}/{dataset_name}/{folder}/", f"{root_path}/{dataset_name}_{quality}/{folder}/", quality)
