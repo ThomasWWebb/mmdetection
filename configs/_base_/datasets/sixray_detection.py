@@ -1,5 +1,3 @@
-from .custom_transforms import custom_RandomCrop
-
 dataset_type = 'SIXrayDataset'
 data_root = 'datasets/sixray/'
 img_norm_cfg = dict(
