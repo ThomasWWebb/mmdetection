@@ -1,4 +1,12 @@
-from mmdet.datasets import PIPELINES
+import inspect
+
+import mmcv
+import numpy as np
+from numpy import random
+
+from mmdet.core import PolygonMasks
+from mmdet.core.evaluation.bbox_overlaps import bbox_overlaps
+from ..builder import PIPELINES
 
 @PIPELINES.register_module()
 class custom_RandomCrop(object):
