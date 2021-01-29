@@ -403,7 +403,7 @@ class Rotate(object):
         self.max_rotate_angle = max_rotate_angle
         self.random_negative_prob = random_negative_prob
 
-    def _rotate_img(self, results, angle, center=None, scale=1.0):
+    def _rotate_img(self, results, angle=10, center=None, scale=1.0):
         """Rotate the image.
 
         Args:
