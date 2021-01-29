@@ -358,7 +358,7 @@ class Rotate(object):
                  center=None,
                  img_fill_val=128,
                  seg_ignore_label=255,
-                 prob=0.5,
+                 prob=0.6,
                  max_rotate_angle=30,
                  random_negative_prob=0.5):
         assert isinstance(level, (int, float)), \
