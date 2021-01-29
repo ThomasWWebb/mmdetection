@@ -74,10 +74,6 @@ class custom_RandomRotate(object):
             results[key] = bboxes
         return results
 
-        
-
-img_, bboxes_ = RandomRotate(20)(img.copy(), bboxes.copy())
-
 @PIPELINES.register_module()
 class custom_RandomCrop(object):
     """Random crop the image & bboxes & masks.
