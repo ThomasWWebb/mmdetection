@@ -83,6 +83,8 @@ class SmoothL1Loss(nn.Module):
         assert reduction_override in (None, 'none', 'mean', 'sum')
         reduction = (
             reduction_override if reduction_override else self.reduction)
+        if target.numel() == 0:
+            return torch.zeros_like(pred)
         loss_bbox = self.loss_weight * smooth_l1_loss(
             pred,
             target,
