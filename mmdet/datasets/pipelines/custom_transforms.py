@@ -1,9 +1,9 @@
 import inspect
-#import mmcv
+import mmcv
 import numpy as np
 from numpy import random
-from mmdetection.DataAugmentationForObjectDetection.data_aug import *
-from mmdetection.DataAugmentationForObjectDetection.bbox_util import *
+from data_aug.data_aug import *
+from data_aug.bbox_util import *
 import cv2 
 import matplotlib.pyplot as plt 
 
