@@ -211,6 +211,7 @@ class CustomDataset(Dataset):
         if self.proposals is not None:
             results['proposals'] = self.proposals[idx]
         self.pre_pipeline(results)
+        print(self.pipeline.transforms)
         return self.pipeline(results)
 
     def prepare_test_img(self, idx):
