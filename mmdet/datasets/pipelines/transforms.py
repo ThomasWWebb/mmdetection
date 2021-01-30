@@ -392,6 +392,7 @@ class RandomFlip(object):
         return flipped
 
     def __call__(self, results):
+        print(results)
         """Call function to flip bounding boxes, masks, semantic segmentation
         maps.
 
