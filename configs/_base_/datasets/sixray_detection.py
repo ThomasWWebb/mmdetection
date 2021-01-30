@@ -13,6 +13,7 @@ train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
     dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
+    dict(type='custom_CutMix'),
     dict(type='RandomFlip', flip_ratio=0.75, direction=['horizontal', 'vertical']),
     #dict(type='RandomFlip', flip_ratio=0.0),
     #dict(type='Albu', transforms=albu_transforms),

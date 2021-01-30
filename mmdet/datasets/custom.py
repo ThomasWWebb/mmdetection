@@ -209,11 +209,11 @@ class CustomDataset(Dataset):
         ann_info = self.get_ann_info(idx)
         cutmix_img_info = self.data_infos[0]
         cutmix_ann_info = self.get_ann_info(0)
-        results = dict(img_info=img_info, ann_info=ann_info, cutmix_img_info=cutmix_img_info, cutmix_ann_info=cutmix_ann_info)
+        cutmix_img = dict(img_info=cutmix_img_info, ann_info=cutmix_ann_info)
+        results = dict(img_info=img_info, ann_info=ann_info, cutmix_img=cutmix_img)
         if self.proposals is not None:
             results['proposals'] = self.proposals[idx]
         self.pre_pipeline(results)
-        print(self.pipeline.transforms)
         return self.pipeline(results)
 
     def prepare_test_img(self, idx):
