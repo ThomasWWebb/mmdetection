@@ -1,16 +1,15 @@
 import inspect
 import mmcv
+
 import numpy as np
 from numpy import random
-#from data_aug.data_aug import *
-#from data_aug.bbox_util import *
 import cv2 
 import matplotlib.pyplot as plt 
 
 from mmdet.core import PolygonMasks
 from mmdet.core.evaluation.bbox_overlaps import bbox_overlaps
 from ..builder import PIPELINES
-from loading import LoadImageFromFile
+from loading import (LoadImageFromFile)
 
 @PIPELINES.register_module()
 class custom_RandomCrop(object):
