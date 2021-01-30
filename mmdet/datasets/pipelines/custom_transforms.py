@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from mmdet.core import PolygonMasks
 from mmdet.core.evaluation.bbox_overlaps import bbox_overlaps
 from ..builder import PIPELINES
-from loading import (LoadImageFromFile)
+from .loading import (LoadImageFromFile)
 
 @PIPELINES.register_module()
 class custom_RandomCrop(object):
