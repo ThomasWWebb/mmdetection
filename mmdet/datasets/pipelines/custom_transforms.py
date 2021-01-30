@@ -1,5 +1,6 @@
 import inspect
 import mmcv
+from mmcv.utils import build_from_cfg
 
 import numpy as np
 from numpy import random
