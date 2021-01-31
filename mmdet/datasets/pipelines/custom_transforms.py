@@ -200,7 +200,7 @@ class custom_MixUp(object):
         img_1 = results["img"]
         img_2 = extra_img["img"]
         img_2_bboxes = extra_img["ann_info"]["bboxes"]
-        img_2, img_2_bboxes = resize(img, bboxes, img_1.shape[1], img_1.shape[0])
+        img_2, img_2_bboxes = self.resize(img, bboxes, img_1.shape[1], img_1.shape[0])
         mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
         results["img"] = mixed_img
         results["ann_info"]["bboxes"] += img_2_bboxes
@@ -211,7 +211,7 @@ class custom_MixUp(object):
         print("##############################################")
         return results
 
-    def resize(img, bboxes, new_w, new_h):
+    def resize(self, img, bboxes, new_w, new_h):
         w_ratio = new_w / img.shape[1]
         h_ratio = new_h / img.shape[0]
         img = cv2.resize(img, (new_w, new_h))
