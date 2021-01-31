@@ -187,12 +187,13 @@ class custom_RandomCrop(object):
         return repr_str
 
 @PIPELINES.register_module()
-class custom_CutMix(object):
+class custom_MixUp(object):
     def __init__(self):
         self.loadImageFromFile = build_from_cfg(dict(type='LoadImageFromFile'), PIPELINES)
 
     def __call__(self, results):
-        cutmix_img = results["cutmix_img"]
-        cutmix_img = self.loadImageFromFile(cutmix_img)
-        results["cutmix_img"] = cutmix_img
+        extra_img = results["extra_img"]
+        extra_img = self.loadImageFromFile(extra_img)
+        results["extra_img"] = extra_img
+        print(results)
         return results
