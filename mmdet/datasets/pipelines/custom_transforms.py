@@ -2,6 +2,7 @@ import inspect
 import mmcv
 from mmcv.utils import build_from_cfg
 
+import random
 import numpy as np
 from numpy import random
 import cv2 
@@ -188,20 +189,22 @@ class custom_RandomCrop(object):
 
 @PIPELINES.register_module()
 class custom_MixUp(object):
-    def __init__(self):
+    def __init__(self, mixUp_prob):
         self.loadImageFromFile = build_from_cfg(dict(type='LoadImageFromFile'), PIPELINES)
+        self.probability = mixUp_prob
 
     def __call__(self, results):
-        extra_img = results["extra_img"]
-        extra_img = self.loadImageFromFile(extra_img)
-        img_1 = results["img"]
-        img_2 = extra_img["img"]
-        img_2_bboxes = extra_img["ann_info"]["bboxes"]
-        img_2, img_2_bboxes = self.resize(img_2, img_2_bboxes, img_1.shape[1], img_1.shape[0])
-        mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
-        results["img"] = mixed_img
-        results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],img_2_bboxes))
-        results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],extra_img["ann_info"]["labels"]))
+        if random.random() < self.probability:
+            extra_img = results["extra_img"]
+            extra_img = self.loadImageFromFile(extra_img)
+            img_1 = results["img"]
+            img_2 = extra_img["img"]
+            img_2_bboxes = extra_img["ann_info"]["bboxes"]
+            img_2, img_2_bboxes = self.resize(img_2, img_2_bboxes, img_1.shape[1], img_1.shape[0])
+            mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
+            results["img"] = mixed_img
+            results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],img_2_bboxes))
+            results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],extra_img["ann_info"]["labels"]))
         return results
 
     def resize(self, img, bboxes, new_w, new_h):
