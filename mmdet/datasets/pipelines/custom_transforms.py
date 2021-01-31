@@ -211,7 +211,7 @@ class custom_MixUp(object):
         # print("after before mixup")
         # print(results)
         # print("##############################################")
-        return results
+        #return results
 
     def resize(self, img, bboxes, new_w, new_h):
         w_ratio = new_w / img.shape[1]
