@@ -194,17 +194,30 @@ class custom_MixUp(object):
     def __call__(self, results):
         extra_img = results["extra_img"]
         extra_img = self.loadImageFromFile(extra_img)
-        results["extra_img"] = extra_img
+        #results["extra_img"] = extra_img
         print("##############################################")
         print("results before mixup")
         img_1 = results["img"]
         img_2 = extra_img["img"]
+        img_2_bboxes = extra_img["ann_info"]["bboxes"]
+        img_2, img_2_bboxes = resize(img, bboxes, img_1.shape[1], img_1.shape[0])
         mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
         results["img"] = mixed_img
-        results["ann_info"]["bboxes"].append(extra_img["ann_info"]["bboxes"])
-        results["ann_info"]["labels"].append(extra_img["ann_info"]["labels"])
+        results["ann_info"]["bboxes"] += img_2_bboxes
+        results["ann_info"]["labels"] += extra_img["ann_info"]["labels"] 
         print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         print("after before mixup")
         print(results)
         print("##############################################")
         return results
+
+    def resize(img, bboxes, new_w, new_h):
+        w_ratio = new_w / img.shape[1]
+        h_ratio = new_h / img.shape[0]
+        img = cv2.resize(img, (new_w, new_h))
+        for bbox in bboxes:
+            bbox[0] = bbox[0] * w_ratio
+            bbox[2] = bbox[2] * w_ratio
+            bbox[1] = bbox[1] * h_ratio
+            bbox[3] = bbox[3] * h_ratio
+        return img, bboxes
