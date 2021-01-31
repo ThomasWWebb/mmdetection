@@ -205,7 +205,7 @@ class CustomDataset(Dataset):
             dict: Training data and annotation after pipeline with new keys \
                 introduced by pipeline.
         """
-        extra_index = random.choice(len(self.data_infos))
+        extra_index = random.choice(range(len(self.data_infos)))
         extra_img_info = self.data_infos[extra_index]
         extra_ann_info = self.get_ann_info(extra_index)
         extra_img = dict(img_info=extra_img_info, ann_info=extra_ann_info)
