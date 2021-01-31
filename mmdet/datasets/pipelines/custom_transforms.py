@@ -194,7 +194,6 @@ class custom_MixUp(object):
     def __call__(self, results):
         extra_img = results["extra_img"]
         extra_img = self.loadImageFromFile(extra_img)
-        #results["extra_img"] = extra_img
         img_1 = results["img"]
         img_2 = extra_img["img"]
         img_2_bboxes = extra_img["ann_info"]["bboxes"]
@@ -203,8 +202,7 @@ class custom_MixUp(object):
         results["img"] = mixed_img
         results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],img_2_bboxes))
         results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],extra_img["ann_info"]["labels"]))
-        print(results)
-        #return results
+        return results
 
     def resize(self, img, bboxes, new_w, new_h):
         w_ratio = new_w / img.shape[1]
