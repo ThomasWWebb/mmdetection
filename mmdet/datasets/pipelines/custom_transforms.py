@@ -195,5 +195,16 @@ class custom_MixUp(object):
         extra_img = results["extra_img"]
         extra_img = self.loadImageFromFile(extra_img)
         results["extra_img"] = extra_img
+        print("##############################################")
+        print("results before mixup")
+        img_1 = results["img"]
+        img_2 = extra_img["img"]
+        mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
+        results["img"] = mixed_img
+        results["ann_info"]["bboxes"].append(extra_img["ann_info"]["bboxes"])
+        results["ann_info"]["labels"].append(extra_img["ann_info"]["labels"])
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print("after before mixup")
         print(results)
+        print("##############################################")
         return results
