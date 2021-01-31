@@ -203,12 +203,16 @@ class custom_MixUp(object):
         img_2, img_2_bboxes = self.resize(img_2, img_2_bboxes, img_1.shape[1], img_1.shape[0])
         mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
         results["img"] = mixed_img
-        results["ann_info"]["bboxes"] += img_2_bboxes
-        results["ann_info"]["labels"] += extra_img["ann_info"]["labels"] 
-        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        print("after before mixup")
-        print(results)
-        print("##############################################")
+        print(results["ann_info"]["bboxes"])
+        print(img_2_bboxes)
+        #results["ann_info"]["bboxes"] += img_2_bboxes
+        print(results["ann_info"]["labels"])
+        print(extra_img["ann_info"]["labels"] )
+        #results["ann_info"]["labels"] += extra_img["ann_info"]["labels"] 
+        # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        # print("after before mixup")
+        # print(results)
+        # print("##############################################")
         return results
 
     def resize(self, img, bboxes, new_w, new_h):
