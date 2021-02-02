@@ -4,10 +4,10 @@ img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 
 albu_transforms = [
-    #dict(type='Equalize',
-    #mode='cv',
-    #by_channels=False)]
-    dict(type='Blur')]
+    dict(type='Equalize',
+    mode='cv',
+    by_channels=False)]
+    #dict(type='Blur')]
 
 train_pipeline = [
     dict(type='LoadImageFromFile'),
@@ -17,7 +17,7 @@ train_pipeline = [
     #dict(type='RandomFlip', flip_ratio=0.75, direction=['horizontal', 'vertical']),
     dict(type='RandomFlip', flip_ratio=0.0),
     #dict(type='Albu', transforms=albu_transforms),
-    dict(type='custom_RandomCrop',crop_type='relative_range', crop_size=(0.75, 0.75)),
+    #dict(type='custom_RandomCrop',crop_type='relative_range', crop_size=(0.75, 0.75)),
     #dict(type='Rotate',level=10),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
