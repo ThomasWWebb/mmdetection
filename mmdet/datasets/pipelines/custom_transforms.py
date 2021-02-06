@@ -243,20 +243,68 @@ class custom_bboxMixUp(object):
         return results
 
     def get_acceptable_bbox(self, possible_bboxes, bboxes_to_avoid, iou_limit):
+        print(possible_bboxes)
         if len(possible_bboxes) == 1:
             print("this is a potential one")
             print(possible_bboxes)
         else:
-            bbox = np.array([possible_bboxes[0]])
-            bbox_list = np.array(possible_bboxes[1:])
-            self.compare_bboxes(bbox, bbox_list, 0.2)
+            bbox = possible_bboxes[0]
+            bbox_list =possible_bboxes[1:]
+            bb1 = {'x1':int(bbox[0]), 'x2':int(bbox[0]) + int(bbox[2]), 'y1':int(bbox[1]), 'y2':int(bbox[1]) + int(bbox[3])}
+            for bbox_to_compare in bbox_list:
+                bb2 = {'x1':int(bbox_to_compare[0]), 'x2':int(bbox_to_compare[0]) + int(bbox_to_compare[2]), 'y1':int(bbox_to_compare[1]), 'y2':int(bbox_to_compare[1]) + int(bbox_to_compare[3])}
+                print(get_iou(bb2,bb1))
 
+    #https://stackoverflow.com/questions/25349178/calculating-percentage-of-bounding-box-overlap-for-image-detector-evaluation
+    def get_iou(bb1, bb2):
+        """
+        Calculate the Intersection over Union (IoU) of two bounding boxes.
 
-    def compare_bboxes(self, bbox, bbox_list,iou_limit):
-        iou_overlaps = self.iou_calculator(bbox, bbox_list, mode='iou', is_aligned=True)
-        print(iou_overlaps)
-        for iou in iou_overlaps:
-            print(iou)   
+        Parameters
+        ----------
+        bb1 : dict
+            Keys: {'x1', 'x2', 'y1', 'y2'}
+            The (x1, y1) position is at the top left corner,
+            the (x2, y2) position is at the bottom right corner
+        bb2 : dict
+            Keys: {'x1', 'x2', 'y1', 'y2'}
+            The (x, y) position is at the top left corner,
+            the (x2, y2) position is at the bottom right corner
+
+        Returns
+        -------
+        float
+            in [0, 1]
+        """
+        assert bb1['x1'] < bb1['x2']
+        assert bb1['y1'] < bb1['y2']
+        assert bb2['x1'] < bb2['x2']
+        assert bb2['y1'] < bb2['y2']
+
+        # determine the coordinates of the intersection rectangle
+        x_left = max(bb1['x1'], bb2['x1'])
+        y_top = max(bb1['y1'], bb2['y1'])
+        x_right = min(bb1['x2'], bb2['x2'])
+        y_bottom = min(bb1['y2'], bb2['y2'])
+
+        if x_right < x_left or y_bottom < y_top:
+            return 0.0
+
+        # The intersection of two axis-aligned bounding boxes is always an
+        # axis-aligned bounding box
+        intersection_area = (x_right - x_left) * (y_bottom - y_top)
+
+        # compute the area of both AABBs
+        bb1_area = (bb1['x2'] - bb1['x1']) * (bb1['y2'] - bb1['y1'])
+        bb2_area = (bb2['x2'] - bb2['x1']) * (bb2['y2'] - bb2['y1'])
+
+        # compute the intersection over union by taking the intersection
+        # area and dividing it by the sum of prediction + ground-truth
+        # areas - the interesection area
+        iou = intersection_area / float(bb1_area + bb2_area - intersection_area)
+        assert iou >= 0.0
+        assert iou <= 1.0
+        return iou
 
     def resize(self, img, bboxes, new_w, new_h):
         w_ratio = new_w / img.shape[1]
