@@ -253,10 +253,10 @@ class custom_bboxMixUp(object):
             bb1 = {'x1':int(bbox[0]), 'x2':int(bbox[0]) + int(bbox[2]), 'y1':int(bbox[1]), 'y2':int(bbox[1]) + int(bbox[3])}
             for bbox_to_compare in bbox_list:
                 bb2 = {'x1':int(bbox_to_compare[0]), 'x2':int(bbox_to_compare[0]) + int(bbox_to_compare[2]), 'y1':int(bbox_to_compare[1]), 'y2':int(bbox_to_compare[1]) + int(bbox_to_compare[3])}
-                print(get_iou(bb2,bb1))
+                print(self.get_iou(bb2,bb1))
 
     #https://stackoverflow.com/questions/25349178/calculating-percentage-of-bounding-box-overlap-for-image-detector-evaluation
-    def get_iou(bb1, bb2):
+    def get_iou(self, bb1, bb2):
         """
         Calculate the Intersection over Union (IoU) of two bounding boxes.
 
