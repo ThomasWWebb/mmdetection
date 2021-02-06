@@ -12,7 +12,7 @@ albu_transforms = [
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    #dict(type='custom_MixUp', mixUp_prob=0.5),
+    dict(type='custom_bboxMixUp', mixUp_prob=1),
     dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
     #dict(type='RandomFlip', flip_ratio=0.75, direction=['horizontal', 'vertical']),
     dict(type='RandomFlip', flip_ratio=0.0),
