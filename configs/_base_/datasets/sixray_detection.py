@@ -12,9 +12,10 @@ albu_transforms = [
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='custom_bboxMixUp', mixUp_prob=1),
+    
     dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
     #dict(type='RandomFlip', flip_ratio=0.75, direction=['horizontal', 'vertical']),
+    dict(type='custom_bboxMixUp', mixUp_prob=1),
     dict(type='RandomFlip', flip_ratio=0.0),
     #dict(type='Albu', transforms=albu_transforms),
     #dict(type='custom_RandomCrop',crop_type='relative_range', crop_size=(0.75, 0.75)),
