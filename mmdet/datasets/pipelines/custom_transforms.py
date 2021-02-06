@@ -254,7 +254,7 @@ class custom_bboxMixUp(object):
         bb1 = {'x1':int(bbox[0]), 'x2':int(bbox[0]) + int(bbox[2]), 'y1':int(bbox[1]), 'y2':int(bbox[1]) + int(bbox[3])}
         for bbox_to_compare in bbox_list:
             bb2 = {'x1':int(bbox_to_compare[0]), 'x2':int(bbox_to_compare[0]) + int(bbox_to_compare[2]), 'y1':int(bbox_to_compare[1]), 'y2':int(bbox_to_compare[1]) + int(bbox_to_compare[3])}
-            if self.get_iou(bb2,bb1)) > iou_limit:
+            if self.get_iou(bb2,bb1) > iou_limit:
                 return False
         return True
 
