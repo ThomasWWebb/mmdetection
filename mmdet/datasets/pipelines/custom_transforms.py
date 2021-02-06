@@ -247,8 +247,8 @@ class custom_bboxMixUp(object):
             print("this is a potential one")
             print(possible_bboxes)
         else:
-            bbox = possible_bboxes[0]
-            bbox_list = possible_bboxes[1:]
+            bbox = np.array([possible_bboxes[0]])
+            bbox_list = np.array(possible_bboxes[1:])
             self.compare_bboxes(bbox, bbox_list, 0.2)
 
 
