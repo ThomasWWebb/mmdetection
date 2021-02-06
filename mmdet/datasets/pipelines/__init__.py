@@ -11,7 +11,7 @@ from .test_time_aug import MultiScaleFlipAug
 from .transforms import (Albu, CutOut, Expand, MinIoURandomCrop, Normalize,
                          Pad, PhotoMetricDistortion, RandomCenterCropPad,
                          RandomCrop, RandomFlip, Resize, SegRescale)
-from .custom_transforms import (custom_RandomCrop, custom_MixUp)
+from .custom_transforms import (custom_RandomCrop, custom_MixUp, custom_bboxMixUp)
 
 __all__ = [
     'Compose', 'to_tensor', 'ToTensor', 'ImageToTensor', 'ToDataContainer',
@@ -22,5 +22,5 @@ __all__ = [
     'MinIoURandomCrop', 'Expand', 'PhotoMetricDistortion', 'Albu',
     'InstaBoost', 'RandomCenterCropPad', 'AutoAugment', 'CutOut', 'Shear',
     'Rotate', 'ColorTransform', 'EqualizeTransform', 'BrightnessTransform',
-    'ContrastTransform', 'Translate', 'custom_RandomCrop', 'custom_MixUp'
+    'ContrastTransform', 'Translate', 'custom_RandomCrop', 'custom_MixUp','custom_bboxMixUp'
 ]
