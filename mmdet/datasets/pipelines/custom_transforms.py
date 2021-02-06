@@ -223,6 +223,7 @@ class custom_MixUp(object):
 class custom_bboxMixUp(object):
     def __init__(self, mixUp_prob):
         self.loadImageFromFile = build_from_cfg(dict(type='LoadImageFromFile'), PIPELINES)
+        self.bboxOverlaps2D = build_from_cfg(dict(type='BboxOverlaps2D'), PIPELINES)
         self.probability = mixUp_prob
 
     def __call__(self, results):
@@ -251,7 +252,7 @@ class custom_bboxMixUp(object):
 
 
     def compare_bboxes(self, bbox, bbox_list,iou_limit):
-        iou_overlaps = BboxOverlaps2D([bbox], [bbox_list], mode='iou', is_aligned=True)
+        iou_overlaps = self.bboxOverlaps2D([bbox], [bbox_list], mode='iou', is_aligned=True)
         print(iou_overlaps)
         for iou in iou_overlaps:
             print(iou)   
