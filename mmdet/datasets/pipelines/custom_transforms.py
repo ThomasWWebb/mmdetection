@@ -253,7 +253,7 @@ class custom_bboxMixUp(object):
 
 
     def compare_bboxes(self, bbox, bbox_list,iou_limit):
-        iou_overlaps = self.iou_calculator([bbox], [bbox_list], mode='iou', is_aligned=True)
+        iou_overlaps = self.iou_calculator(bbox, bbox_list, mode='iou', is_aligned=True)
         print(iou_overlaps)
         for iou in iou_overlaps:
             print(iou)   
