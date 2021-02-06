@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 
 from mmdet.core import PolygonMasks
 from mmdet.core.evaluation.bbox_overlaps import bbox_overlaps
+from mmdet.core.bbox.iou_calculators.iou2d_calculator import BboxOverlaps2D
 from ..builder import PIPELINES
 from .loading import (LoadImageFromFile)
 
@@ -206,6 +207,54 @@ class custom_MixUp(object):
             results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],img_2_bboxes))
             results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],extra_img["ann_info"]["labels"]))
         return results
+
+    def resize(self, img, bboxes, new_w, new_h):
+        w_ratio = new_w / img.shape[1]
+        h_ratio = new_h / img.shape[0]
+        img = cv2.resize(img, (new_w, new_h))
+        for bbox in bboxes:
+            bbox[0] = bbox[0] * w_ratio
+            bbox[2] = bbox[2] * w_ratio
+            bbox[1] = bbox[1] * h_ratio
+            bbox[3] = bbox[3] * h_ratio
+        return img, bboxes
+
+@PIPELINES.register_module()
+class custom_bboxMixUp(object):
+    def __init__(self, mixUp_prob):
+        self.loadImageFromFile = build_from_cfg(dict(type='LoadImageFromFile'), PIPELINES)
+        self.probability = mixUp_prob
+
+    def __call__(self, results):
+        if random.random() < self.probability:
+            extra_img = results["extra_img"]
+            extra_img = self.loadImageFromFile(extra_img)
+            img_1 = results["img"]
+            img_2 = extra_img["img"]
+            img_2_bboxes = extra_img["ann_info"]["bboxes"]
+            img_2, img_2_bboxes = self.resize(img_2, img_2_bboxes, img_1.shape[1], img_1.shape[0])
+            self.get_acceptable_bbox(img_2_bboxes, results["ann_info"]["bboxes"], 0.2)
+            #mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
+            #results["img"] = mixed_img
+            #results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],img_2_bboxes))
+            #results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],extra_img["ann_info"]["labels"]))
+        return results
+
+    def get_acceptable_bbox(self, possible_bboxes, bboxes_to_avoid, iou_limit):
+        if len(possible_bboxes) == 1:
+            print("this is a potential one")
+            print(possible_bboxes)
+        else:
+            bbox = possible_bboxes[0]
+            bbox_list = possible_bboxes[1:]
+            self.compare_bboxes(bbox, bbox_list, 0.2)
+
+
+    def compare_bboxes(self, bbox, bbox_list,iou_limit):
+        iou_overlaps = BboxOverlaps2D([bbox], [bbox_list], mode='iou', is_aligned=True)
+        print(iou_overlaps)
+        for iou in iou_overlaps:
+            print(iou)   
 
     def resize(self, img, bboxes, new_w, new_h):
         w_ratio = new_w / img.shape[1]
