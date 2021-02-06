@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from mmdet.core import PolygonMasks
 from mmdet.core.evaluation.bbox_overlaps import bbox_overlaps
 from mmdet.core.bbox.iou_calculators.iou2d_calculator import BboxOverlaps2D
+from mmdet.core.bbox.iou_calculators.builder import build_iou_calculator
 from ..builder import PIPELINES
 from .loading import (LoadImageFromFile)
 
@@ -223,7 +224,7 @@ class custom_MixUp(object):
 class custom_bboxMixUp(object):
     def __init__(self, mixUp_prob):
         self.loadImageFromFile = build_from_cfg(dict(type='LoadImageFromFile'), PIPELINES)
-        self.bboxOverlaps2D = build_from_cfg(dict(type='BboxOverlaps2D'), PIPELINES)
+        self.iou_calculator = build_iou_calculator(dict(type='BboxOverlaps2D'))
         self.probability = mixUp_prob
 
     def __call__(self, results):
@@ -252,7 +253,7 @@ class custom_bboxMixUp(object):
 
 
     def compare_bboxes(self, bbox, bbox_list,iou_limit):
-        iou_overlaps = self.bboxOverlaps2D([bbox], [bbox_list], mode='iou', is_aligned=True)
+        iou_overlaps = self.iou_calculator([bbox], [bbox_list], mode='iou', is_aligned=True)
         print(iou_overlaps)
         for iou in iou_overlaps:
             print(iou)   
