@@ -244,16 +244,13 @@ class custom_bboxMixUp(object):
 
     def get_acceptable_bbox(self, possible_bboxes, bboxes_to_avoid, iou_limit):
         print(possible_bboxes)
-        if len(possible_bboxes) == 1:
-            print("this is a potential one")
-            print(possible_bboxes)
-        else:
+        if len(possible_bboxes) > 1:
             bbox = possible_bboxes[0]
             bbox_list =possible_bboxes[1:]
             bb1 = {'x1':int(bbox[0]), 'x2':int(bbox[0]) + int(bbox[2]), 'y1':int(bbox[1]), 'y2':int(bbox[1]) + int(bbox[3])}
             for bbox_to_compare in bbox_list:
                 bb2 = {'x1':int(bbox_to_compare[0]), 'x2':int(bbox_to_compare[0]) + int(bbox_to_compare[2]), 'y1':int(bbox_to_compare[1]), 'y2':int(bbox_to_compare[1]) + int(bbox_to_compare[3])}
-                print(self.get_iou(bb2,bb1))
+                #print(self.get_iou(bb2,bb1))
 
     #https://stackoverflow.com/questions/25349178/calculating-percentage-of-bounding-box-overlap-for-image-detector-evaluation
     def get_iou(self, bb1, bb2):
