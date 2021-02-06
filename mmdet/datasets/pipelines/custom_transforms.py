@@ -224,7 +224,6 @@ class custom_MixUp(object):
 class custom_bboxMixUp(object):
     def __init__(self, mixUp_prob):
         self.loadImageFromFile = build_from_cfg(dict(type='LoadImageFromFile'), PIPELINES)
-        self.iou_calculator = build_iou_calculator(dict(type='BboxOverlaps2D'))
         self.probability = mixUp_prob
 
     def __call__(self, results):
@@ -240,7 +239,7 @@ class custom_bboxMixUp(object):
             #results["img"] = mixed_img
             #results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],img_2_bboxes))
             #results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],extra_img["ann_info"]["labels"]))
-        return results
+        #return results
 
     def get_acceptable_bbox(self, possible_bboxes, bboxes_to_avoid, iou_limit):
         print(possible_bboxes)
