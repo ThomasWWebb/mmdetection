@@ -243,12 +243,19 @@ class custom_bboxMixUp(object):
                 print(chosen_bboxes)
                 combined_bbox = self.get_combined_bbox(chosen_bboxes)
                 bbox_mixed = cv2.addWeighted(img_1[combined_bbox[1]:combined_bbox[3], combined_bbox[0]:combined_bbox[2]], 0.25, img_2[combined_bbox[1]:combined_bbox[3], combined_bbox[0]:combined_bbox[2]], 0.75, 0.0)
-            #
-            #mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
-            #results["img"] = mixed_img
-            #results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],img_2_bboxes))
-            #results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],extra_img["ann_info"]["labels"]))
-        #return results
+                img_1[combined_bbox[1]:combined_bbox[3], combined_bbox[0]:combined_bbox[2]] = bbox_mixed
+                results["img"] = img_1
+                results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],chosen_bboxes))
+                chosen_labels = self.get_labels(chosen_bboxes, extra_img["ann_info"]["bboxes"], extra_img["ann_info"]["labels"])
+                results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],chosen_labels))
+        return results
+
+    def get_labels(self, chosen_bboxes, all_bboxes, labels):
+        chosen_labels = []
+        for index in range(len(all_bboxes)):
+            if all_bboxes[index] in chosen_bboxes:
+                chosen_labels.append(labels[index])
+        return chosen_labels
 
     def get_combined_bbox(self, chosen_bboxes):
         x1_coords = []
