@@ -225,6 +225,7 @@ class custom_bboxMixUp(object):
     def __init__(self, mixUp_prob):
         self.loadImageFromFile = build_from_cfg(dict(type='LoadImageFromFile'), PIPELINES)
         self.probability = mixUp_prob
+        self.iou_limit = 0.3
 
     def __call__(self, results):
         if random.random() < self.probability:
@@ -237,20 +238,29 @@ class custom_bboxMixUp(object):
             chosen_index = random.choice(range(len(img_2_bboxes)))
             potential_bboxes = [img_2_bboxes[chosen_index]]
             img_2_bboxes = np.delete(img_2_bboxes, chosen_index, 0)
-            self.get_acceptable_bbox(potential_bboxes, img_2_bboxes, results["ann_info"]["bboxes"], 0.2)
+            chosen_bboxes = self.get_acceptable_bbox(potential_bboxes, img_2_bboxes, iou_limit)
+            if self.no_overlaps(chosen_bboxes, results["ann_info"]["bboxes"], iou_limit):
+                print(chosen_bboxes)
+            #
             #mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
             #results["img"] = mixed_img
             #results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],img_2_bboxes))
             #results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],extra_img["ann_info"]["labels"]))
         #return results
 
-    def get_acceptable_bbox(self, chosen_bboxes, possible_bboxes, bboxes_to_avoid, iou_limit):
-        if len(possible_bboxes) == 0:
-            return chosen_bboxes
-        elif len(possible_bboxes) > 0:
-            print("before {} and {}".format(chosen_bboxes,  possible_bboxes))
-            chosen_bboxes = self.acceptable_overlaps(chosen_bboxes, possible_bboxes, 0.2)
-            print("after {} and {}".format(chosen_bboxes,  possible_bboxes))
+    def no_overlaps(self, chosen_bboxes, bboxes_to_avoid, iou_limit):
+        for bbox in chosen_bboxes:
+            bb1 = {'x1':int(bbox[0]), 'x2':int(bbox[0]) + int(bbox[2]), 'y1':int(bbox[1]), 'y2':int(bbox[1]) + int(bbox[3])}
+            for bbox_to_compare in bboxes_to_avoid:
+                bb2 = {'x1':int(bbox_to_compare[0]), 'x2':int(bbox_to_compare[0]) + int(bbox_to_compare[2]), 'y1':int(bbox_to_compare[1]), 'y2':int(bbox_to_compare[1]) + int(bbox_to_compare[3])}
+                if self.get_iou(bb2,bb1) > iou_limit:
+                    return False
+        return True
+
+    def get_acceptable_bbox(self, chosen_bboxes, possible_bboxes, iou_limit):
+        if len(possible_bboxes) > 0:
+            return self.acceptable_overlaps(chosen_bboxes, possible_bboxes, iou_limit)
+        return chosen_bboxes
             
     def acceptable_overlaps(self, chosen_bboxes, bbox_list, iou_limit):
         bbox = chosen_bboxes[0] 
