@@ -249,7 +249,7 @@ class custom_bboxMixUp(object):
             return chosen_bboxes
         elif len(possible_bboxes) > 0:
             print("before {} and {}".format(chosen_bboxes,  possible_bboxes))
-            chosen_bboxes = self.acceptable_overlaps(chosen_bboxes, bbox_list, 0.2)
+            chosen_bboxes = self.acceptable_overlaps(chosen_bboxes, possible_bboxes, 0.2)
             print("after {} and {}".format(chosen_bboxes,  possible_bboxes))
             
     def acceptable_overlaps(self, chosen_bboxes, bbox_list, iou_limit):
