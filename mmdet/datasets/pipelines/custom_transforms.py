@@ -234,8 +234,9 @@ class custom_bboxMixUp(object):
             img_2 = extra_img["img"]
             img_2_bboxes = extra_img["ann_info"]["bboxes"]
             img_2, img_2_bboxes = self.resize(img_2, img_2_bboxes, img_1.shape[1], img_1.shape[0])
-            potential_bboxes = [img_2_bboxes[random.choice(range(len(img_2_bboxes)))]]
-            img_2_bboxes.remove(potential_bboxes[0])
+            chosen_index = random.choice(range(len(img_2_bboxes)))
+            potential_bboxes = [img_2_bboxes[chosen_index]]
+            img_2_bboxes = np.delete(img_2_bboxes, chosen_index, 0)
             self.get_acceptable_bbox(potential_bboxes, img_2_bboxes, results["ann_info"]["bboxes"], 0.2)
             #mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
             #results["img"] = mixed_img
