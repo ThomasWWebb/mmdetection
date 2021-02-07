@@ -241,14 +241,27 @@ class custom_bboxMixUp(object):
             chosen_bboxes = self.get_acceptable_bbox(potential_bboxes, img_2_bboxes, self.iou_limit)
             if self.no_overlaps(chosen_bboxes, results["ann_info"]["bboxes"], self.iou_limit):
                 print(chosen_bboxes)
-            else:
-                print("overlaps found")
+                combined_bbox = self.get_combined_bbox(chosen_bboxes)
+                bbox_mixed = cv2.addWeighted(img_1[combined_bbox[1]:combined_bbox[3], combined_bbox[0]:combined_bbox[2]], 0.25, img_2[combined_bbox[1]:combined_bbox[3], combined_bbox[0]:combined_bbox[2]], 0.75, 0.0)
             #
             #mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
             #results["img"] = mixed_img
             #results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],img_2_bboxes))
             #results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],extra_img["ann_info"]["labels"]))
         #return results
+
+    def get_combined_bbox(self, chosen_bboxes):
+        x1_coords = []
+        x2_coords = []
+        y1_coords = []
+        y2_coords = []
+        for bbox in chosen_bboxes:
+            x1_coords.append(int(bbox[0]))
+            x2_coords.append(int(bbox[0]) + int(bbox[2]))
+            y1_coords.append(int(bbox[1]))
+            y2_coords.append(int(bbox[1]) + int(bbox[3]))
+        return [min(x1_coords), min(y1_coords), max(x2_coords), max(y2_coords)]
+
 
     def no_overlaps(self, chosen_bboxes, bboxes_to_avoid, iou_limit):
         for bbox in chosen_bboxes:
