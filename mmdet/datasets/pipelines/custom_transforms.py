@@ -241,6 +241,8 @@ class custom_bboxMixUp(object):
             chosen_bboxes = self.get_acceptable_bbox(potential_bboxes, img_2_bboxes, self.iou_limit)
             if self.no_overlaps(chosen_bboxes, results["ann_info"]["bboxes"], self.iou_limit):
                 print(chosen_bboxes)
+            else:
+                print("overlaps found")
             #
             #mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
             #results["img"] = mixed_img
