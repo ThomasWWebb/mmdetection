@@ -252,8 +252,9 @@ class custom_bboxMixUp(object):
 
     def get_labels(self, chosen_bboxes, all_bboxes, labels):
         chosen_labels = []
+        chosen_bboxes = [tuple(x) for x in chosen_bboxes]
         for index in range(len(all_bboxes)):
-            if all_bboxes[index] in chosen_bboxes:
+            if tuple(all_bboxes[index]) in chosen_bboxes:
                 chosen_labels.append(labels[index])
         return chosen_labels
 
