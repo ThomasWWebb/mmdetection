@@ -240,7 +240,6 @@ class custom_bboxMixUp(object):
             img_2_bboxes = np.delete(img_2_bboxes, chosen_index, 0)
             chosen_bboxes = self.get_acceptable_bbox(potential_bboxes, img_2_bboxes, self.iou_limit)
             if self.no_overlaps(chosen_bboxes, results["ann_info"]["bboxes"], self.iou_limit):
-                print(chosen_bboxes)
                 combined_bbox = self.get_combined_bbox(chosen_bboxes)
                 bbox_mixed = cv2.addWeighted(img_1[combined_bbox[1]:combined_bbox[3], combined_bbox[0]:combined_bbox[2]], 0.25, img_2[combined_bbox[1]:combined_bbox[3], combined_bbox[0]:combined_bbox[2]], 0.75, 0.0)
                 img_1[combined_bbox[1]:combined_bbox[3], combined_bbox[0]:combined_bbox[2]] = bbox_mixed
