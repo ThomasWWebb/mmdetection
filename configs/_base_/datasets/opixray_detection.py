@@ -7,8 +7,8 @@ albu_transforms = [
     #dict(type='Equalize',
     #mode='cv',
     #by_channels=False)]
-    dict(type='Blur')]
-    #dict(type='JpegCompression', quality_lower=10, quality_upper=11)]
+    #dict(type='Blur')]
+    dict(type='JpegCompression', quality_lower=10, quality_upper=11)]
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
