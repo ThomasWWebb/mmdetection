@@ -17,7 +17,8 @@ train_pipeline = [
     #dict(type='custom_RandomCrop',crop_type='relative_range', crop_size=(0.75, 0.75)),
     dict(type='Resize', img_scale=(1225, 954), keep_ratio=True),
     dict(type='RandomFlip', flip_ratio=0.0),
-    dict(type='Albu', transforms=albu_transforms),
+    #dict(type='Albu', transforms=albu_transforms),
+    dict(type='Rotate',level=10)
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundle'),
