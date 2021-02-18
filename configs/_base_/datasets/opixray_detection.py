@@ -2,13 +2,21 @@ dataset_type = 'OPIXrayDataset'
 data_root = 'datasets/opixray/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+
+albu_transforms = [
+    #dict(type='Equalize',
+    #mode='cv',
+    #by_channels=False)]
+    dict(type='Blur')]
+    #dict(type='JpegCompression', quality_lower=10, quality_upper=11)]
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
     #dict(type='custom_bboxMixUp', mixUp_prob=0.5),
-    dict(type='custom_RandomCrop',crop_type='relative_range', crop_size=(0.75, 0.75)),
+    #dict(type='custom_RandomCrop',crop_type='relative_range', crop_size=(0.75, 0.75)),
     dict(type='Resize', img_scale=(1225, 954), keep_ratio=True),
     dict(type='RandomFlip', flip_ratio=0.0),
+    dict(type='Albu', transforms=albu_transforms),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundle'),
