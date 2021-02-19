@@ -197,14 +197,19 @@ class custom_MixUp(object):
 
     def __call__(self, results):
         if random.random() < self.probability:
+            #get the current image
+            img_1 = results["img"]
+            #get the data of the extra image
             extra_img = results["extra_img"]
             extra_img = self.loadImageFromFile(extra_img)
-            img_1 = results["img"]
             img_2 = extra_img["img"]
             img_2_bboxes = extra_img["ann_info"]["bboxes"]
+            #resize the extra image and its bboxes to be the same size as the current image to enable a consistent weighted addition
             img_2, img_2_bboxes = self.resize(img_2, img_2_bboxes, img_1.shape[1], img_1.shape[0])
+            #Combine the two images
             mixed_img = cv2.addWeighted(img_1, 0.5, img_2, 0.5, 0.0)
             results["img"] = mixed_img
+            #add the extra image bboxes and class labels to the mixed image's annotations
             results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],img_2_bboxes))
             results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],extra_img["ann_info"]["labels"]))
         return results
@@ -229,21 +234,31 @@ class custom_bboxMixUp(object):
 
     def __call__(self, results):
         if random.random() < self.probability:
+            #get the current image
+            img_1 = results["img"]
+            #get the data of the extra image
             extra_img = results["extra_img"]
             extra_img = self.loadImageFromFile(extra_img)
-            img_1 = results["img"]
             img_2 = extra_img["img"]
             img_2_bboxes = extra_img["ann_info"]["bboxes"]
+            #resize the extra image and its bboxes to be the same size as the current image to enable a consistent mix-up
             img_2, img_2_bboxes = self.resize(img_2, img_2_bboxes, img_1.shape[1], img_1.shape[0])
+            #randomly selected a bbox from the extra image
             chosen_index = random.choice(range(len(img_2_bboxes)))
             potential_bboxes = [img_2_bboxes[chosen_index]]
             img_2_bboxes = np.delete(img_2_bboxes, chosen_index, 0)
-            chosen_bboxes = self.get_acceptable_bbox(potential_bboxes, img_2_bboxes, self.iou_limit)
+            #add all bboxes that sufficiently overlap with the randomly chosen bbox
+            chosen_bboxes = self.get_overlapping_bboxes(potential_bboxes, img_2_bboxes, self.iou_limit)
+            #Check that the chosen bboxes from the extra image don't overlap over some threshold with the bboxes of the current image (img_1)
             if self.no_overlaps(chosen_bboxes, results["ann_info"]["bboxes"], self.iou_limit):
+                #combine all chosen bboxes into one large area
                 combined_bbox = self.get_combined_bbox(chosen_bboxes)
+                #Combine the two areas denoted by the combined_bbox in both images, retaining most of the extra image's bbox information
                 bbox_mixed = cv2.addWeighted(img_1[combined_bbox[1]:combined_bbox[3], combined_bbox[0]:combined_bbox[2]], 0.25, img_2[combined_bbox[1]:combined_bbox[3], combined_bbox[0]:combined_bbox[2]], 0.75, 0.0)
+                #Assign the combined bbox area back to the current image
                 img_1[combined_bbox[1]:combined_bbox[3], combined_bbox[0]:combined_bbox[2]] = bbox_mixed
                 results["img"] = img_1
+                #add the extra image bboxes and class labels contained in the combined bbox to the current image's annotations
                 results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],chosen_bboxes))
                 chosen_labels = self.get_labels(chosen_bboxes, extra_img["ann_info"]["bboxes"], extra_img["ann_info"]["labels"])
                 results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],chosen_labels))
@@ -279,7 +294,7 @@ class custom_bboxMixUp(object):
                     return False
         return True
 
-    def get_acceptable_bbox(self, chosen_bboxes, possible_bboxes, iou_limit):
+    def get_overlapping_bboxes(self, chosen_bboxes, possible_bboxes, iou_limit):
         if len(possible_bboxes) > 0:
             return self.acceptable_overlaps(chosen_bboxes, possible_bboxes, iou_limit)
         return chosen_bboxes
