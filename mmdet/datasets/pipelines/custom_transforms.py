@@ -15,6 +15,7 @@ from mmdet.core.bbox.iou_calculators.builder import build_iou_calculator
 from ..builder import PIPELINES
 from .loading import (LoadImageFromFile)
 
+#https://github.com/open-mmlab/mmdetection/blob/master/mmdet/datasets/pipelines/transforms.py
 @PIPELINES.register_module()
 class custom_RandomCrop(object):
     """Random crop the image & bboxes & masks.
