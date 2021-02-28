@@ -27,5 +27,4 @@ except AssertionError:
 @DATASETS.register_module()
 class DEEI6Dataset(CocoDataset):
 
-    CLASSES = ('Bottle', "Hairdryer", "Toaster", "Iron", "Mobile_Tab", "Laptop")
-
+    CLASSES = ('BOTTLE', "HAIRDRYER", "IRON", "TOASTER", "MOBILETAB", "LAPTOP")
