@@ -217,7 +217,7 @@ class custom_CutMix(object):
             img_2_object = img_2[int(img_2_bbox[1]):int(img_2_bbox[1]+img_2_bbox[3]), int(img_2_bbox[0]):int(img_2_bbox[0]+img_2_bbox[2])]
             img_2_bbox, img_2_object = self.resize(img_1_bbox, img_2_bbox, img_2_object)
             #img_2_object = cv2.resize(crop_im1, (int(c2_w2/2),int(c2_h2)), interpolation=cv2.INTER_AREA)!!!
-            img_1_object[img_1_bbox[1]:, img_1_bbox[0] + (img_1_bbox[2] // 2):] = img_2_object[img_1_bbox[1]:, img_1_bbox[0] + (img_1_bbox[2] // 2):]
+            img_1_object[int(img_1_bbox[1]):, int(img_1_bbox[0] + (img_1_bbox[2] // 2)):] = img_2_object[int(img_1_bbox[1]):, int(img_1_bbox[0] + (img_1_bbox[2] // 2)):]
             img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])] = img_1_object
             #Combine the two images
             results["img"] = img_1
