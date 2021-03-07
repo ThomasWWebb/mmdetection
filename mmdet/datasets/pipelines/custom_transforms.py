@@ -211,19 +211,16 @@ class custom_CutMix(object):
             img_1_bbox = img_1_bboxes[img_1_index]
             img_2_index = random.choice(range(len(img_2_bboxes)))
             img_2_bbox = img_2_bboxes[img_2_index]
-            
-            
+
             img_1_object = img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])]
             img_2_object = img_2[int(img_2_bbox[1]):int(img_2_bbox[1]+img_2_bbox[3]), int(img_2_bbox[0]):int(img_2_bbox[0]+img_2_bbox[2])]
             img_2_bbox, img_2_object = self.resize(img_1_bbox, img_2_bbox, img_2_object)
-            #img_2_object = cv2.resize(crop_im1, (int(c2_w2/2),int(c2_h2)), interpolation=cv2.INTER_AREA)!!!
-            img_1_object[int(img_1_bbox[1]):, int(img_1_bbox[0] + (img_1_bbox[2] // 2)):] = img_2_object[int(img_1_bbox[1]):, int(img_1_bbox[0] + (img_1_bbox[2] // 2)):]
+            img_1_object[:, int(img_1_bbox[2] // 2):] = img_2_object[:, int(img_1_bbox[2] // 2):]
             img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])] = img_1_object
             #Combine the two images
             results["img"] = img_1
-            #add the extra image bboxes and class labels to the mixed image's annotations
+            # #add the extra image bboxes and class labels to the mixed image's annotations
             img_1_bbox[2] = img_1_bbox[2] // 2
-            img_1_bbox[3] = img_1_bbox[3] // 2
             img_2_bbox[0] = img_1_bbox[0] + img_1_bbox[2]
             img_2_bbox[1] = img_1_bbox[1]
             img_2_bbox[2] = img_1_bbox[2]
@@ -231,13 +228,12 @@ class custom_CutMix(object):
             results["ann_info"]["bboxes"][img_1_index] = img_1_bbox
             results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],[img_2_bbox]))
             results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],[extra_img["ann_info"]["labels"][img_2_index]]))
-            cv2.imwrite("testing.jpg", img_1)
         return results
 
     def resize(self, img_1_bbox, img_2_bbox, img_2_object):
         w_ratio = img_1_bbox[2] / img_2_bbox[2]
         h_ratio = img_1_bbox[3] / img_2_bbox[3]
-        img_2_object = cv2.resize(img_2_object, (img_1_bbox[2], img_1_bbox[3]), interpolation=cv2.INTER_AREA)
+        img_2_object = cv2.resize(img_2_object, (int(img_1_bbox[2]), int(img_1_bbox[3])), interpolation=cv2.INTER_AREA)
         img_2_bbox[2] = img_2_bbox[2] * w_ratio
         img_2_bbox[3] = img_2_bbox[3] * h_ratio
         return img_2_bbox, img_2_object
