@@ -199,6 +199,7 @@ class custom_CutMix(object):
     def __call__(self, results):
         if random.random() < self.probability:
             #get the current image
+            print(results)
             img_1 = results["img"]
             img_1_bboxes = results["ann_info"]["bboxes"]
             #get the data of the extra image
@@ -228,7 +229,7 @@ class custom_CutMix(object):
             results["ann_info"]["bboxes"][img_1_index] = img_1_bbox
             results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],[img_2_bbox]))
             results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],[extra_img["ann_info"]["labels"][img_2_index]]))
-        return results
+        #return results
 
     def resize(self, img_1_bbox, img_2_bbox, img_2_object):
         w_ratio = img_1_bbox[2] / img_2_bbox[2]
