@@ -200,35 +200,35 @@ class custom_CutMix(object):
         if random.random() < self.probability:
             #get the current image
             print(results)
-            img_1 = results["img"]
-            img_1_bboxes = results["ann_info"]["bboxes"]
-            #get the data of the extra image
-            extra_img = results["extra_img"]
-            extra_img = self.loadImageFromFile(extra_img)
-            img_2 = extra_img["img"]
-            img_2_bboxes = extra_img["ann_info"]["bboxes"]
-            #Get random object from the main image and extra image
-            img_1_index = random.choice(range(len(img_1_bboxes)))
-            img_1_bbox = img_1_bboxes[img_1_index]
-            img_2_index = random.choice(range(len(img_2_bboxes)))
-            img_2_bbox = img_2_bboxes[img_2_index]
+            # img_1 = results["img"]
+            # img_1_bboxes = results["ann_info"]["bboxes"]
+            # #get the data of the extra image
+            # extra_img = results["extra_img"]
+            # extra_img = self.loadImageFromFile(extra_img)
+            # img_2 = extra_img["img"]
+            # img_2_bboxes = extra_img["ann_info"]["bboxes"]
+            # #Get random object from the main image and extra image
+            # img_1_index = random.choice(range(len(img_1_bboxes)))
+            # img_1_bbox = img_1_bboxes[img_1_index]
+            # img_2_index = random.choice(range(len(img_2_bboxes)))
+            # img_2_bbox = img_2_bboxes[img_2_index]
 
-            img_1_object = img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])]
-            img_2_object = img_2[int(img_2_bbox[1]):int(img_2_bbox[1]+img_2_bbox[3]), int(img_2_bbox[0]):int(img_2_bbox[0]+img_2_bbox[2])]
-            img_2_bbox, img_2_object = self.resize(img_1_bbox, img_2_bbox, img_2_object)
-            img_1_object[:, int(img_1_bbox[2] // 2):] = img_2_object[:, int(img_1_bbox[2] // 2):]
-            img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])] = img_1_object
-            #Combine the two images
-            results["img"] = img_1
-            # #add the extra image bboxes and class labels to the mixed image's annotations
-            img_1_bbox[2] = img_1_bbox[2] // 2
-            img_2_bbox[0] = img_1_bbox[0] + img_1_bbox[2]
-            img_2_bbox[1] = img_1_bbox[1]
-            img_2_bbox[2] = img_1_bbox[2]
-            img_2_bbox[3] = img_1_bbox[3]
-            results["ann_info"]["bboxes"][img_1_index] = img_1_bbox
-            results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],[img_2_bbox]))
-            results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],[extra_img["ann_info"]["labels"][img_2_index]]))
+            # img_1_object = img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])]
+            # img_2_object = img_2[int(img_2_bbox[1]):int(img_2_bbox[1]+img_2_bbox[3]), int(img_2_bbox[0]):int(img_2_bbox[0]+img_2_bbox[2])]
+            # img_2_bbox, img_2_object = self.resize(img_1_bbox, img_2_bbox, img_2_object)
+            # img_1_object[:, int(img_1_bbox[2] // 2):] = img_2_object[:, int(img_1_bbox[2] // 2):]
+            # img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])] = img_1_object
+            # #Combine the two images
+            # results["img"] = img_1
+            # # #add the extra image bboxes and class labels to the mixed image's annotations
+            # img_1_bbox[2] = img_1_bbox[2] // 2
+            # img_2_bbox[0] = img_1_bbox[0] + img_1_bbox[2]
+            # img_2_bbox[1] = img_1_bbox[1]
+            # img_2_bbox[2] = img_1_bbox[2]
+            # img_2_bbox[3] = img_1_bbox[3]
+            # results["ann_info"]["bboxes"][img_1_index] = img_1_bbox
+            # results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],[img_2_bbox]))
+            # results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],[extra_img["ann_info"]["labels"][img_2_index]]))
         #return results
 
     def resize(self, img_1_bbox, img_2_bbox, img_2_object):
