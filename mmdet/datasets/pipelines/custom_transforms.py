@@ -199,8 +199,9 @@ class custom_CutMix(object):
     def __call__(self, results):
         if random.random() < self.probability:
             #get the current image
-            print(results["img_info"]["file_name"])
-            print(results["extra_img"]["img_info"]["file_name"])
+            f = open("file_pair.txt", "w")
+            f.write(results["img_info"]["file_name"] + " " + results["extra_img"]["img_info"]["file_name"])
+            f.close()
             img_1 = results["img"]
             img_1_bboxes = results["ann_info"]["bboxes"]
             #get the data of the extra image
