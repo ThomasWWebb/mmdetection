@@ -214,7 +214,7 @@ class custom_CutMix(object):
             img_2_bbox = img_2_bboxes[img_2_index]
 
             img_1_object = img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])]
-            assert img_1_object.shape[0] == img_1_bbox[3], "{} != {}".format(img_1_object.shape, img_1_bbox)
+            assert img_1_object.shape[0] == img_1_bbox[3], "{} != {}, {} {}".format(img_1_object.shape, img_1_bbox, results["img_info"]["file_name"], img_1.shape)
             img_2_object = img_2[int(img_2_bbox[1]):int(img_2_bbox[1]+img_2_bbox[3]), int(img_2_bbox[0]):int(img_2_bbox[0]+img_2_bbox[2])]
             assert img_1_object.shape[0] == img_1_bbox[3], "img 1 {} != {}".format(img_1_object.shape, img_1_bbox)
             assert img_2_object.shape[0] == img_2_bbox[3], "img 2 {} != {}".format(img_2_object.shape, img_2_bbox)
