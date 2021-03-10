@@ -213,43 +213,29 @@ class custom_CutMix(object):
             img_2_index = random.choice(range(len(img_2_bboxes)))
             img_2_bbox = img_2_bboxes[img_2_index]
 
-            assert False, "{} {}".format(results["img_info"]["file_name"], results["ann_info"]["bboxes"])
-            # img_1_object = img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])]
-            # assert img_1_object.shape[0] == img_1_bbox[3], "{} != {}, {} {}".format(img_1_object.shape, img_1_bbox, results["img_info"]["file_name"], img_1.shape)
-            # img_2_object = img_2[int(img_2_bbox[1]):int(img_2_bbox[1]+img_2_bbox[3]), int(img_2_bbox[0]):int(img_2_bbox[0]+img_2_bbox[2])]
-            # assert img_1_object.shape[0] == img_1_bbox[3], "img 1 {} != {}".format(img_1_object.shape, img_1_bbox)
-            # assert img_2_object.shape[0] == img_2_bbox[3], "img 2 {} != {}".format(img_2_object.shape, img_2_bbox)
-            # img_2_bbox, img_2_object = self.resize(img_1_bbox, img_2_bbox, img_2_object)
-            # assert img_1_object.shape[0] == img_1_bbox[3], "{} != {}".format(img_1_object.shape, img_1_bbox)
-            # assert img_1_object.shape == img_2_object.shape, "{} != {}, bbox 1 {}, bbox 2 {}".format(img_1_object.shape, img_2_object.shape, img_1_bbox, img_2_bbox)
-            # f = open("file_pair.txt", "w")
-            # f.write(results["img_info"]["file_name"] + " " + results["extra_img"]["img_info"]["file_name"])
-            # f.write(f'({img_1_object.shape[0]}, {img_1_object.shape[1]}, {img_1_object.shape[2]})')
-            # f.write(f'({img_2_object.shape[0]}, {img_2_object.shape[1]}, {img_2_object.shape[2]})')
-            # f.close()
-            # img_1_object[:, int(img_1_bbox[2] // 2):] = img_2_object[:, int(img_1_bbox[2] // 2):]
-            # img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])] = img_1_object
+            img_1_object = img_1[int(img_1_bbox[1]):int(img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[2])]
+            img_2_object = img_2[int(img_2_bbox[1]):int(img_2_bbox[3]), int(img_2_bbox[0]):int(img_2_bbox[2])]
+            img_2_object = self.resize(img_1_object, img_2_object)
+            img_1_object[:, int((img_1_bbox[2] - img_1_bbox[0]) // 2):] = img_2_object[:, int((img_1_bbox[2] - img_1_bbox[0]) // 2):]
+            img_1[int(img_1_bbox[1]):int(img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[2])] = img_1_object
 
-            # #Combine the two images
-            # results["img"] = img_1
-            # # #add the extra image bboxes and class labels to the mixed image's annotations
-            # img_1_bbox[2] = img_1_bbox[2] // 2
-            # img_2_bbox[0] = img_1_bbox[0] + img_1_bbox[2]
-            # img_2_bbox[1] = img_1_bbox[1]
-            # img_2_bbox[2] = img_1_bbox[2]
-            # img_2_bbox[3] = img_1_bbox[3]
-            # results["ann_info"]["bboxes"][img_1_index] = img_1_bbox
-            # results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],[img_2_bbox]))
-            # results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],[extra_img["ann_info"]["labels"][img_2_index]]))
-        #return results
+            #Combine the two images
+            results["img"] = img_1
+            #add the extra image bboxes and class labels to the mixed image's annotations
+            img_1_bbox[2] = img_1_bbox[0] + (img_1_bbox[2] - img_1_bbox[0]) // 2
+            img_2_bbox[0] = img_1_bbox[2]
+            img_2_bbox[1] = img_1_bbox[1]
+            img_2_bbox[2] = img_1_bbox[2] + (img_1_bbox[2] - img_1_bbox[0]) // 2
+            img_2_bbox[3] = img_1_bbox[3]
+            results["ann_info"]["bboxes"][img_1_index] = img_1_bbox
+            results["ann_info"]["bboxes"] = np.concatenate((results["ann_info"]["bboxes"],[img_2_bbox]))
+            results["ann_info"]["labels"] = np.concatenate((results["ann_info"]["labels"],[extra_img["ann_info"]["labels"][img_2_index]]))
+        return results
 
-    def resize(self, img_1_bbox, img_2_bbox, img_2_object):
-        w_ratio = img_1_bbox[2] / img_2_bbox[2]
-        h_ratio = img_1_bbox[3] / img_2_bbox[3]
-        img_2_object = cv2.resize(img_2_object, (int(img_1_bbox[2]), int(img_1_bbox[3])), interpolation=cv2.INTER_AREA)
-        img_2_bbox[2] = img_2_bbox[2] * w_ratio
-        img_2_bbox[3] = img_2_bbox[3] * h_ratio
-        return img_2_bbox, img_2_object
+    def resize(self, img_1_object, img_2_object):
+        c1_h1, c1_w1, _ = img_1_object.shape
+        img_2_object = cv2.resize(img_2_object, (int(c1_w1),int(c1_h1)), interpolation=cv2.INTER_AREA)
+        return img_2_object
 
 @PIPELINES.register_module()
 class custom_MixUp(object):
