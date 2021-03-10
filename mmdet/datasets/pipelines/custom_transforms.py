@@ -216,7 +216,7 @@ class custom_CutMix(object):
             img_1_object = img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])]
             img_2_object = img_2[int(img_2_bbox[1]):int(img_2_bbox[1]+img_2_bbox[3]), int(img_2_bbox[0]):int(img_2_bbox[0]+img_2_bbox[2])]
             img_2_bbox, img_2_object = self.resize(img_1_bbox, img_2_bbox, img_2_object)
-            assert img_1_object.shape == img_2_object.shape, "{} != {}".format(img_1_object.shape, img_2_object.shape)
+            assert img_1_object.shape == img_2_object.shape, "{} != {}, bbox 1 {}, bbox 2 {}".format(img_1_object.shape, img_2_object.shape, img_1_bbox, img_2_bbox)
             # f = open("file_pair.txt", "w")
             # f.write(results["img_info"]["file_name"] + " " + results["extra_img"]["img_info"]["file_name"])
             # f.write(f'({img_1_object.shape[0]}, {img_1_object.shape[1]}, {img_1_object.shape[2]})')
