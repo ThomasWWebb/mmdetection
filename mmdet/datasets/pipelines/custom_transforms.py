@@ -213,14 +213,17 @@ class custom_CutMix(object):
             img_2_index = random.choice(range(len(img_2_bboxes)))
             img_2_bbox = img_2_bboxes[img_2_index]
 
-            img_1_object = img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])]
-            assert img_1_object.shape[0] == img_1_bbox[3], "{} != {}, {} {}".format(img_1_object.shape, img_1_bbox, results["img_info"]["file_name"], img_1.shape)
-            img_2_object = img_2[int(img_2_bbox[1]):int(img_2_bbox[1]+img_2_bbox[3]), int(img_2_bbox[0]):int(img_2_bbox[0]+img_2_bbox[2])]
-            assert img_1_object.shape[0] == img_1_bbox[3], "img 1 {} != {}".format(img_1_object.shape, img_1_bbox)
-            assert img_2_object.shape[0] == img_2_bbox[3], "img 2 {} != {}".format(img_2_object.shape, img_2_bbox)
-            img_2_bbox, img_2_object = self.resize(img_1_bbox, img_2_bbox, img_2_object)
-            assert img_1_object.shape[0] == img_1_bbox[3], "{} != {}".format(img_1_object.shape, img_1_bbox)
-            assert img_1_object.shape == img_2_object.shape, "{} != {}, bbox 1 {}, bbox 2 {}".format(img_1_object.shape, img_2_object.shape, img_1_bbox, img_2_bbox)
+            print(results["img_info"]["file_name"])
+            print(results["ann_info"]["bboxes"])
+
+            # img_1_object = img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])]
+            # assert img_1_object.shape[0] == img_1_bbox[3], "{} != {}, {} {}".format(img_1_object.shape, img_1_bbox, results["img_info"]["file_name"], img_1.shape)
+            # img_2_object = img_2[int(img_2_bbox[1]):int(img_2_bbox[1]+img_2_bbox[3]), int(img_2_bbox[0]):int(img_2_bbox[0]+img_2_bbox[2])]
+            # assert img_1_object.shape[0] == img_1_bbox[3], "img 1 {} != {}".format(img_1_object.shape, img_1_bbox)
+            # assert img_2_object.shape[0] == img_2_bbox[3], "img 2 {} != {}".format(img_2_object.shape, img_2_bbox)
+            # img_2_bbox, img_2_object = self.resize(img_1_bbox, img_2_bbox, img_2_object)
+            # assert img_1_object.shape[0] == img_1_bbox[3], "{} != {}".format(img_1_object.shape, img_1_bbox)
+            # assert img_1_object.shape == img_2_object.shape, "{} != {}, bbox 1 {}, bbox 2 {}".format(img_1_object.shape, img_2_object.shape, img_1_bbox, img_2_bbox)
             # f = open("file_pair.txt", "w")
             # f.write(results["img_info"]["file_name"] + " " + results["extra_img"]["img_info"]["file_name"])
             # f.write(f'({img_1_object.shape[0]}, {img_1_object.shape[1]}, {img_1_object.shape[2]})')
