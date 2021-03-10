@@ -216,17 +216,15 @@ class custom_CutMix(object):
             img_1_object = img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])]
             img_2_object = img_2[int(img_2_bbox[1]):int(img_2_bbox[1]+img_2_bbox[3]), int(img_2_bbox[0]):int(img_2_bbox[0]+img_2_bbox[2])]
             img_2_bbox, img_2_object = self.resize(img_1_bbox, img_2_bbox, img_2_object)
-            print("!!!")
-            print(img_1_object.shape)
-            print(img_2_object.shape)
+            assert img_1_object.shape = img_2_object.shape, "{} != {}".format(img_1_object.shape, img_2_object.shape)
             # f = open("file_pair.txt", "w")
             # f.write(results["img_info"]["file_name"] + " " + results["extra_img"]["img_info"]["file_name"])
             # f.write(f'({img_1_object.shape[0]}, {img_1_object.shape[1]}, {img_1_object.shape[2]})')
             # f.write(f'({img_2_object.shape[0]}, {img_2_object.shape[1]}, {img_2_object.shape[2]})')
             # f.close()
-            img_1_object[:, int(img_1_bbox[2] // 2):] = img_2_object[:, int(img_1_bbox[2] // 2):]
+            # img_1_object[:, int(img_1_bbox[2] // 2):] = img_2_object[:, int(img_1_bbox[2] // 2):]
             # img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])] = img_1_object
-            
+
             # #Combine the two images
             # results["img"] = img_1
             # # #add the extra image bboxes and class labels to the mixed image's annotations
