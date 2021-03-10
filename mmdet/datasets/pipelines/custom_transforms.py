@@ -213,8 +213,7 @@ class custom_CutMix(object):
             img_2_index = random.choice(range(len(img_2_bboxes)))
             img_2_bbox = img_2_bboxes[img_2_index]
 
-            print(results["img_info"]["file_name"])
-            print(results["ann_info"]["bboxes"])
+            print(f'{results["img_info"]["file_name"]} {results["ann_info"]["bboxes"]})
 
             # img_1_object = img_1[int(img_1_bbox[1]):int(img_1_bbox[1]+img_1_bbox[3]), int(img_1_bbox[0]):int(img_1_bbox[0]+img_1_bbox[2])]
             # assert img_1_object.shape[0] == img_1_bbox[3], "{} != {}, {} {}".format(img_1_object.shape, img_1_bbox, results["img_info"]["file_name"], img_1.shape)
