@@ -111,11 +111,11 @@ class CustomDataset(Dataset):
         class_dict = {}
         for idx in range(len(data_infos)):
             data_infos[idx]["index"] = idx
-            sys.exit(data_infos[idx])
-            if data_info['ann']["category_id"] not in class_dict:
-                class_dict[data_info['ann']["category_id"]] = [data_info]
+            ann_info = self.get_ann_info(idx)
+            if ann_info["category_id"] not in class_dict:
+                class_dict[ann_info["category_id"]] = [data_infos[idx]]
             else:
-                class_dict[data_info['ann']["category_id"]].append(data_info)
+                class_dict[ann_info["category_id"]].append(data_infos[idx])
         return class_dict
             
     def __len__(self):
