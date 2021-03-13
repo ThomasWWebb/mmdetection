@@ -109,8 +109,8 @@ class CustomDataset(Dataset):
 
     def sort_classes(self, data_infos):
         class_dict = {}
-        for data_info in data_infos:
-            sys.exit(self.get_ann_info(0))
+        for idx in range(len(data_infos)):
+            sys.exit(self.data_infos[idx]['ann'])
             if data_info['ann']["category_id"] not in class_dict:
                 class_dict[data_info['ann']["category_id"]] = [data_info]
             else:
