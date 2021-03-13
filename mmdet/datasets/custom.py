@@ -71,8 +71,6 @@ class CustomDataset(Dataset):
         self.filter_empty_gt = filter_empty_gt
         self.CLASSES = self.get_classes(classes)
 
-        sys.exit(self.CLASSES)
-
         # join paths if data_root is specified
         if self.data_root is not None:
             if not osp.isabs(self.ann_file):
@@ -104,6 +102,21 @@ class CustomDataset(Dataset):
 
         # processing pipeline
         self.pipeline = Compose(pipeline)
+
+        #sort classes into dictionary for class focussed CutMix
+        self.class_dict = sort_classes(self.data_infos)
+        sys.exit(self.class_dict)
+
+    def sort_classes(data_infos):
+        class_dict = {}
+        for data_info in data_infos:
+            if data_info['ann']["category_id"] not in class_dict:
+                class_dict[data_info['ann']["category_id"]] = [data_info]
+            else:
+                class_dict[data_info['ann']["category_id"]].append(data_info)
+        return class_dict
+            
+
 
     def __len__(self):
         """Total number of samples of data."""
