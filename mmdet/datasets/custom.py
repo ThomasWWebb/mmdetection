@@ -231,8 +231,9 @@ class CustomDataset(Dataset):
 
         #Adds an extra image for use in custom transformations
         if self.class_targets != None and ann_info["labels"][0] in self.class_targets:
-            class_index = random.choice(range(len(self.class_dict[self.class_targets[ann_info["labels"][0]]])))
-            extra_index = self.class_dict[ann_info["labels"][0]][class_index]["index"]
+            class_target = self.class_targets[ann_info["labels"][0]]
+            class_index = random.choice(range(len(self.class_dict[class_target])))
+            extra_index = self.class_dict[class_target][class_index]["index"]
         else:
             extra_index = random.choice(range(len(self.data_infos)))
         extra_img_info = self.data_infos[extra_index]
