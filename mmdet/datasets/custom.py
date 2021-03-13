@@ -70,6 +70,9 @@ class CustomDataset(Dataset):
         self.filter_empty_gt = filter_empty_gt
         self.CLASSES = self.get_classes(classes)
 
+        print(self.CLASSES)
+        break
+
         # join paths if data_root is specified
         if self.data_root is not None:
             if not osp.isabs(self.ann_file):
@@ -195,7 +198,7 @@ class CustomDataset(Dataset):
                 continue
             return data
 
-    def prepare_train_img(self, idx):
+    def prepare_train_img(self, idx, class_targets=None):
         """Get training data and annotations after pipeline.
 
         Args:
@@ -206,15 +209,20 @@ class CustomDataset(Dataset):
                 introduced by pipeline.
         """
 
+        
+        
+        img_info = self.data_infos[idx]
+        ann_info = self.get_ann_info(idx)
+
         #Adds an extra image for use in custom transformations
+        #if class_targets != None and ann_info["category_id"] in class_targets:
+
         extra_index = random.choice(range(len(self.data_infos)))
         extra_img_info = self.data_infos[extra_index]
         extra_ann_info = self.get_ann_info(extra_index)
         extra_img = dict(img_info=extra_img_info, ann_info=extra_ann_info)
         self.pre_pipeline(extra_img)
-        
-        img_info = self.data_infos[idx]
-        ann_info = self.get_ann_info(idx)
+
         results = dict(img_info=img_info, ann_info=ann_info, extra_img=extra_img)
         #results = dict(img_info=img_info, ann_info=ann_info)
         if self.proposals is not None:
