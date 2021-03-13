@@ -1,6 +1,7 @@
 import os.path as osp
 import warnings
 import random
+import sys
 
 import mmcv
 import numpy as np
@@ -70,8 +71,7 @@ class CustomDataset(Dataset):
         self.filter_empty_gt = filter_empty_gt
         self.CLASSES = self.get_classes(classes)
 
-        print(self.CLASSES)
-        break
+        sys.exit(self.CLASSES)
 
         # join paths if data_root is specified
         if self.data_root is not None:
