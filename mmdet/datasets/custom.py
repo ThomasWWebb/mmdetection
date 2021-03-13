@@ -61,7 +61,8 @@ class CustomDataset(Dataset):
                  seg_prefix=None,
                  proposal_file=None,
                  test_mode=False,
-                 filter_empty_gt=True):
+                 filter_empty_gt=True,
+                 class_targets=None):
         self.ann_file = ann_file
         self.data_root = data_root
         self.img_prefix = img_prefix
@@ -70,6 +71,7 @@ class CustomDataset(Dataset):
         self.test_mode = test_mode
         self.filter_empty_gt = filter_empty_gt
         self.CLASSES = self.get_classes(classes)
+        self.class_targets = {1:3, 3:1}
 
         # join paths if data_root is specified
         if self.data_root is not None:
@@ -105,7 +107,6 @@ class CustomDataset(Dataset):
 
         #sort classes into dictionary for class focussed CutMix
         self.class_dict = self.sort_classes(self.data_infos)
-        sys.exit(self.class_dict)
 
     def sort_classes(self, data_infos):
         class_dict = {}
@@ -212,7 +213,7 @@ class CustomDataset(Dataset):
                 continue
             return data
 
-    def prepare_train_img(self, idx, class_targets=None):
+    def prepare_train_img(self, idx):
         """Get training data and annotations after pipeline.
 
         Args:
@@ -229,9 +230,11 @@ class CustomDataset(Dataset):
         ann_info = self.get_ann_info(idx)
 
         #Adds an extra image for use in custom transformations
-        #if class_targets != None and ann_info["category_id"] in class_targets:
-
-        extra_index = random.choice(range(len(self.data_infos)))
+        if class_targets != None and ann_info["category_id"] in class_targets:
+            class_index = random.choice(range(len(self.class_dict[ann_info["category_id"]])))
+            extra_index = self.class_dict[ann_info["category_id"]][class_index]["index"]
+        else:
+            extra_index = random.choice(range(len(self.data_infos)))
         extra_img_info = self.data_infos[extra_index]
         extra_ann_info = self.get_ann_info(extra_index)
         extra_img = dict(img_info=extra_img_info, ann_info=extra_ann_info)
