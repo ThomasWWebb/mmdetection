@@ -71,7 +71,7 @@ class CustomDataset(Dataset):
         self.test_mode = test_mode
         self.filter_empty_gt = filter_empty_gt
         self.CLASSES = self.get_classes(classes)
-        self.class_targets = {1:3, 3:1}
+        self.class_targets = {1:2, 2:1}
 
         # join paths if data_root is specified
         if self.data_root is not None:
@@ -233,7 +233,6 @@ class CustomDataset(Dataset):
         if self.class_targets != None and (set(ann_info["labels"]) & set(self.class_targets.keys())):
             class_indices = [i for i, x in enumerate(ann_info["labels"]) if x in self.class_targets.keys()]
             chosen_class = ann_info["labels"][random.choice(class_indices)]
-            sys.exit("{} {} {} {}".format(ann_info["labels"], self.class_targets.keys(), [i for i, x in enumerate(ann_info["labels"]) if x in self.class_targets.keys()], chosen_class))
             class_target = self.class_targets[chosen_class]
             class_index = random.choice(range(len(self.class_dict[class_target])))
             extra_index = self.class_dict[class_target][class_index]["index"]
