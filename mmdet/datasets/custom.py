@@ -233,6 +233,7 @@ class CustomDataset(Dataset):
         if self.class_targets != None and (set(ann_info["labels"]) & set(self.class_targets.keys())):
             class_indices = [i for i, x in enumerate(ann_info["labels"]) if x in self.class_targets.keys()]
             chosen_class = random.choice(class_indices)
+            sys.exit("{} {} {} {}".format(ann_info["labels"], self.class_targets.keys(), [i for i, x in enumerate(ann_info["labels"]) if x in self.class_targets.keys()], chosen_class))
             class_target = self.class_targets[chosen_class]
             class_index = random.choice(range(len(self.class_dict[class_target])))
             extra_index = self.class_dict[class_target][class_index]["index"]
@@ -242,7 +243,7 @@ class CustomDataset(Dataset):
         extra_ann_info = self.get_ann_info(extra_index)
         extra_img = dict(img_info=extra_img_info, ann_info=extra_ann_info)
         self.pre_pipeline(extra_img)
-        sys.exit("one iteration {}".format(extra_ann_info))
+        
         results = dict(img_info=img_info, ann_info=ann_info, extra_img=extra_img)
         #results = dict(img_info=img_info, ann_info=ann_info)
         if self.proposals is not None:
