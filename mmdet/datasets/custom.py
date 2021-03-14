@@ -240,7 +240,7 @@ class CustomDataset(Dataset):
         extra_ann_info = self.get_ann_info(extra_index)
         extra_img = dict(img_info=extra_img_info, ann_info=extra_ann_info)
         self.pre_pipeline(extra_img)
-        sys.exit(extra_ann_info)
+        sys.exit("one iteration {}".format(extra_ann_info))
         results = dict(img_info=img_info, ann_info=ann_info, extra_img=extra_img)
         #results = dict(img_info=img_info, ann_info=ann_info)
         if self.proposals is not None:
