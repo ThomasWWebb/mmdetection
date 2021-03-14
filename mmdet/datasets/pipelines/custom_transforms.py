@@ -210,7 +210,7 @@ class custom_CutMix(object):
                 img_2 = extra_img["img"]
                 img_2_bboxes = extra_img["ann_info"]["bboxes"]
                 #Get random object from the main image and extra image
-                if self.class_target == None
+                if self.class_target == None:
                     img_1_index = random.choice(range(len(img_1_bboxes)))
                     img_2_index = random.choice(range(len(img_2_bboxes)))
                 else:
@@ -218,7 +218,7 @@ class custom_CutMix(object):
                     img_1_index = random.choice(img_1_class_indices)
                     img_2_class_indices = [i for i, x in enumerate(extra_img["ann_info"]["labels"]) if x in self.class_target.values()]
                     img_2_index = random.choice(img_2_class_indices)
-                    
+
                 img_1_bbox = img_1_bboxes[img_1_index]
                 img_2_bbox = img_2_bboxes[img_2_index]
 
