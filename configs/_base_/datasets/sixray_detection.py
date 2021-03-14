@@ -15,7 +15,7 @@ train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
     #dict(type='custom_MixUp', mixUp_prob=0.5),
-    dict(type='custom_CutMix', cutMix_prob=0.5),
+    dict(type='custom_CutMix', cutMix_prob=0.5, class_targets={1:2, 2:1}),
     #dict(type='custom_bboxMixUp', mixUp_prob=0.5),
     dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
     dict(type='RandomFlip', flip_ratio=0.0),
