@@ -230,8 +230,10 @@ class CustomDataset(Dataset):
         ann_info = self.get_ann_info(idx)
 
         #Adds an extra image for use in custom transformations
-        if self.class_targets != None and ann_info["labels"][0] in self.class_targets:
-            class_target = self.class_targets[ann_info["labels"][0]]
+        if self.class_targets != None and (set(ann_info["labels"]) & set(self.class_targets.keys())):
+            class_indices = [i for i, x in enumerate(ann_info["labels"]) if x in self.class_target.keys()]
+            chosen_class = random.choice(chosen_class)
+            class_target = self.class_targets[chosen_class]
             class_index = random.choice(range(len(self.class_dict[class_target])))
             extra_index = self.class_dict[class_target][class_index]["index"]
         else:
