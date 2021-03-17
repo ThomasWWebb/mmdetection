@@ -383,6 +383,7 @@ class ResNet(nn.Module):
                  with_cp=False,
                  zero_init_residual=True):
         super(ResNet, self).__init__()
+        assert False, "Using my folder of mmdet to build the backbone"
         if depth not in self.arch_settings:
             raise KeyError(f'invalid depth {depth} for resnet')
         self.depth = depth
