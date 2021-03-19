@@ -601,8 +601,9 @@ class ResNet(nn.Module):
         elif pretrained is None:
             for m in self.modules():
                 if isinstance(m, nn.Conv2d):
-                    kaiming_init(m)
+                    #kaiming_init(m)
                     #normal_init(m)
+                    xavier_init(m)
                 elif isinstance(m, (_BatchNorm, nn.GroupNorm)):
                     constant_init(m, 1)
 
