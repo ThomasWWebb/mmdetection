@@ -89,7 +89,7 @@ class DetectionPerformanceEvaluation:
         y_pred = [y + 1 for y in y_pred]
         cats = ['background'] + [cat['name'] for _, cat in self.ground_truth.cats.items()]
         cnf_mtx = confusion_matrix(y_true, y_pred, normalize='true')
-        print(cnf_mtx)
+        #print(cnf_mtx)
 
 
         ####TPR/FPR/TNR
@@ -127,13 +127,13 @@ class DetectionPerformanceEvaluation:
         FNRav = sum(FNR[1:])/(len(FNR)-1)
         ACCav = sum(ACC[1:])/(len(ACC)-1)
 
-        print('***********************************************************************')
-        print('Stats from confusion Matrix:')
-        print('Class-wise:')
-        print(f'TPR: {TPR}\nTNR: {TNR}\nFPR: {FPR}\nFNR: {FNR}\nACC: {ACC}')
-        print('Overall:')
-        print(f'TPR: {round(TPRav,3)}\nTNR: {round(TNRav,3)}\nFPR: {round(FPRav,3)}\nFNR: {round(FNRav,3)}\nACC: {round(ACCav,3)}')
-        print('***********************************************************************')    
+        # print('***********************************************************************')
+        # print('Stats from confusion Matrix:')
+        # print('Class-wise:')
+        # print(f'TPR: {TPR}\nTNR: {TNR}\nFPR: {FPR}\nFNR: {FNR}\nACC: {ACC}')
+        # print('Overall:')
+        # print(f'TPR: {round(TPRav,3)}\nTNR: {round(TNRav,3)}\nFPR: {round(FPRav,3)}\nFNR: {round(FNRav,3)}\nACC: {round(ACCav,3)}')
+        # print('***********************************************************************')    
         ####
 
         cnf_mtx_display = ConfusionMatrixDisplay(cnf_mtx, cats)
@@ -142,7 +142,7 @@ class DetectionPerformanceEvaluation:
         cnf_mtx_display.plot(ax=ax, values_format='.3f',xticks_rotation=45)
         if out_image_filename is not None:
             cnf_mtx_display.figure_.savefig(out_image_filename)
-        print(classification_report(y_true, y_pred, target_names=cats))
+        #print(classification_report(y_true, y_pred, target_names=cats))
         pass
 
     def run_coco_metrics(self):
@@ -174,18 +174,19 @@ def build_params():
 def main():
     conf = 0.05
     iou = 0.5
-    db = 'sixray'
-    model = 'free_anchor'
-    backbone = 'r50'
-    epochs = [10]
-
-    os.makedirs(f'../Results/statistics/{model}_{backbone}_e30_{db}_trueResolution', exist_ok=True)
-
-    for epoch in epochs:
-        gt_path = f'../datasets/{db}/annotations/instances_test2017.json'
+    db = 'deei6'
+    model = 'cascade_rcnn'
+    #quality = 95
+    backbone = 'r50' 
+    for epoch in range(10, 40, 10):
+        os.makedirs(f'../Results/statistics/{model}_{backbone}_e30_{db}_originalResolution_merged_raw/', exist_ok=True)
+        if db == "deei6":
+            gt_path = f'../datasets/{db}/annotations/deei6_bayer(zhl)_test.json'
+        else:
+            gt_path = f'../datasets/{db}/annotations/instances_test2017.json'
         # pred_path = f'statistics/{db}_{arch}/test_{conf}conf_{iou}iou.json'
-        pred_path = f'../Results/{model}_{backbone}_e30_{db}_trueResolution/test_results_{db}_e{epoch}.bbox.json'
-        output_image = f'../Results/statistics/{model}_{backbone}_e30_{db}_trueResolution/confmat_bbox_{db}_e{epoch}.png'
+        pred_path = f'../Results/{model}_{backbone}_e30_{db}_originalResolution_merged_raw/test_results_{epoch}.bbox.json'
+        output_image = f'../Results/{model}_{backbone}_e30_{db}_originalResolution_merged_raw/confmat_bbox_{db}_e{epoch}.png'
         # output_image = f'statistics/{db}_{arch}/confmat_{conf}conf_{iou}iou.png'
         confusion_matrix_iou_threshold = 0.5
 

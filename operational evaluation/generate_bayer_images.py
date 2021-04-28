@@ -39,5 +39,5 @@ def bayer_pattern(dataset_root, split_name, new_folder_name):
     num_images = len(os.listdir(f"{dataset_root}/image/{split_name}/{new_folder_name}"))
     print(f"Successfully produced {num_images} images")
 
-dataset_root = "../datasets/deei6"
+dataset_root = "../../datasets/deei6"
 bayer_pattern(dataset_root, "test", "deei6_bayer(z,h,l)")
